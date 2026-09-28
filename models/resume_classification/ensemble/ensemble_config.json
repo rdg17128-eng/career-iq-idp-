@@ -1,0 +1,10 @@
+{
+  "best_model_strategy": "ensemble",
+  "svm_weight": 0.5,
+  "transformer_weight": 0.5,
+  "validation_scores": {
+    "svm": 0.7478207495648527,
+    "transformer": 0.8685933392819465,
+    "ensemble": 0.8765745903223907
+  }
+}

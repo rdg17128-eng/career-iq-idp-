@@ -1,0 +1,15 @@
+{
+  "svm_val_accuracy": 0.7016129032258065,
+  "transformer_val_accuracy": 0.8669354838709677,
+  "transformer_val_metrics": {
+    "eval_loss": 0.6318649649620056,
+    "eval_accuracy": 0.8669354838709677,
+    "eval_f1": 0.8594822584201229,
+    "eval_precision": 0.8593345051006341,
+    "eval_recall": 0.8669354838709677,
+    "eval_runtime": 3.6464,
+    "eval_samples_per_second": 68.012,
+    "eval_steps_per_second": 8.501,
+    "epoch": 5.0
+  }
+}

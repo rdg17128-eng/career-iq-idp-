@@ -1,0 +1,135 @@
+{
+  "hit_rate_at_3": 0.875,
+  "hit_rate_at_5": 1.0,
+  "mean_reciprocal_rank": 0.9,
+  "detailed_results": [
+    {
+      "name": "Alice Johnson",
+      "expected_roles": [
+        "Full Stack Developer",
+        "Software Engineer",
+        "Backend Developer"
+      ],
+      "top_3_recommendations": [
+        "Full Stack Developer",
+        "Backend Developer",
+        "Software Engineer"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "Bob Smith",
+      "expected_roles": [
+        "Data Scientist",
+        "Machine Learning Engineer",
+        "AI/ML Specialist"
+      ],
+      "top_3_recommendations": [
+        "Data Scientist",
+        "Machine Learning Engineer",
+        "AI/ML Specialist"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "Carol Williams",
+      "expected_roles": [
+        "Digital Marketing Manager",
+        "SEO Specialist",
+        "Content Marketing Manager"
+      ],
+      "top_3_recommendations": [
+        "Digital Marketing Manager",
+        "Social Media Content Creator",
+        "Content Marketing Manager"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "David Martinez",
+      "expected_roles": [
+        "Electrician",
+        "Electrical Technician",
+        "Senior Electrician"
+      ],
+      "top_3_recommendations": [
+        "Electrician",
+        "Mechanic",
+        "Diesel Mechanic"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "Emma Thompson",
+      "expected_roles": [
+        "Head Chef",
+        "Sous Chef",
+        "Executive Chef"
+      ],
+      "top_3_recommendations": [
+        "Sous Chef",
+        "Head Chef",
+        "Chef"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "Frank Wilson",
+      "expected_roles": [
+        "Hospital Administrator",
+        "Healthcare Manager",
+        "Operations Manager"
+      ],
+      "top_3_recommendations": [
+        "Healthcare Administrator",
+        "Audit Manager",
+        "Office Manager"
+      ],
+      "hit_at_3": 0,
+      "hit_at_5": 1,
+      "reciprocal_rank": 0.2
+    },
+    {
+      "name": "Grace Lee",
+      "expected_roles": [
+        "Wildlife Biologist",
+        "Conservation Officer",
+        "Park Ranger"
+      ],
+      "top_3_recommendations": [
+        "Wildlife Biologist",
+        "Environmental Scientist",
+        "Meteorologist"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "name": "Henry Kumar",
+      "expected_roles": [
+        "Retail Manager",
+        "Store Manager",
+        "Sales Manager"
+      ],
+      "top_3_recommendations": [
+        "Store Manager",
+        "Retail Supervisor",
+        "Fitness Manager"
+      ],
+      "hit_at_3": 1,
+      "hit_at_5": 1,
+      "reciprocal_rank": 1.0
+    }
+  ]
+}

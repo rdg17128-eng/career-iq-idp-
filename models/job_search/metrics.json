@@ -1,0 +1,131 @@
+{
+  "mean_precision_at_1": 1.0,
+  "mean_precision_at_3": 1.0,
+  "detailed_results": [
+    {
+      "query": "Data Analyst",
+      "top_3_results": [
+        {
+          "rank": 1,
+          "job_title": "Data Analyst II",
+          "hybrid_score": 0.42853160280142477,
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "job_title": "Entry Level Data Analyst",
+          "hybrid_score": 0.411698588229906,
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "job_title": "Data Analyst",
+          "hybrid_score": 0.40775416853826507,
+          "is_relevant": true
+        }
+      ],
+      "p_at_1": 1,
+      "p_at_3": 1.0
+    },
+    {
+      "query": "Business Analyst",
+      "top_3_results": [
+        {
+          "rank": 1,
+          "job_title": "Business Analyst",
+          "hybrid_score": 0.45107938429874106,
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "job_title": "Junior Business Analyst",
+          "hybrid_score": 0.36887894239506536,
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "job_title": "Senior Systems Business Analyst",
+          "hybrid_score": 0.35874219876780594,
+          "is_relevant": true
+        }
+      ],
+      "p_at_1": 1,
+      "p_at_3": 1.0
+    },
+    {
+      "query": "Marketing Data Analyst",
+      "top_3_results": [
+        {
+          "rank": 1,
+          "job_title": "Marketing Data Analyst",
+          "hybrid_score": 0.48780200317079836,
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "job_title": "Sales & Marketing Data Analyst",
+          "hybrid_score": 0.4558938832556627,
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "job_title": "Marketing Data Analyst",
+          "hybrid_score": 0.42919146845299366,
+          "is_relevant": true
+        }
+      ],
+      "p_at_1": 1,
+      "p_at_3": 1.0
+    },
+    {
+      "query": "Business Intelligence Analyst",
+      "top_3_results": [
+        {
+          "rank": 1,
+          "job_title": "Business Intelligence Analyst",
+          "hybrid_score": 0.5279027112445714,
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "job_title": "Business Intelligence Analyst",
+          "hybrid_score": 0.47389498754377535,
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "job_title": "IT Business Intelligence Analyst",
+          "hybrid_score": 0.4425483439633815,
+          "is_relevant": true
+        }
+      ],
+      "p_at_1": 1,
+      "p_at_3": 1.0
+    },
+    {
+      "query": "Supply Chain Data Analyst",
+      "top_3_results": [
+        {
+          "rank": 1,
+          "job_title": "Supply Chain Data Analyst",
+          "hybrid_score": 0.6527108244862013,
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "job_title": "Business Analyst - Supply Chain (Contingent)",
+          "hybrid_score": 0.5907499719183373,
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "job_title": "Business Analyst II - Supply Chain",
+          "hybrid_score": 0.5400259413192627,
+          "is_relevant": true
+        }
+      ],
+      "p_at_1": 1,
+      "p_at_3": 1.0
+    }
+  ]
+}

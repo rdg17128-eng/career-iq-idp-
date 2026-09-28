@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMind AI - Model Suite & Performance Dashboard</title>
+    <meta name="description" content="Explore CareerMind AI's interactive NLP models, resume classification, entity extraction, semantic job search, and career recommendations.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-brain-circuit brain-logo"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>CareerMind <span>AI</span></h1>
+                    <p>NLP Talent Suite</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-btn active" id="btn-overview" data-target="tab-overview">
+                    <i class="fa-solid fa-chart-line"></i> <span>Overview</span>
+                </button>
+                <button class="nav-btn" id="btn-analyzer" data-target="tab-analyzer">
+                    <i class="fa-solid fa-file-invoice"></i> <span>Resume Analyzer</span>
+                </button>
+                <button class="nav-btn" id="btn-matcher" data-target="tab-matcher">
+                    <i class="fa-solid fa-sliders"></i> <span>Job Matcher</span>
+                </button>
+                <button class="nav-btn" id="btn-search" data-target="tab-search">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span>Job Search</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text">All Systems Online</span>
+                </div>
+                <p class="version">v2.1.0 (Gemini Powered)</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h2 id="current-tab-title">Overview & Model Performance</h2>
+                    <p id="current-tab-subtitle">Real-time metrics and system architecture evaluation</p>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn" id="btn-load-samples" title="Load sample resumes and job data">
+                        <i class="fa-solid fa-database"></i> Quick Samples
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Tabs -->
+            <div class="tab-wrapper">
+                
+                <!-- TAB 1: OVERVIEW -->
+                <section class="tab-content active" id="tab-overview">
+                    <!-- Metrics Summary Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card" id="card-classification">
+                            <div class="card-header">
+                                <span>Resume Classification</span>
+                                <i class="fa-solid fa-tags class-icon"></i>
+                            </div>
+                            <div class="metric-value" id="metric-class-accuracy">88.35%</div>
+                            <p class="metric-desc">Hybrid Soft Voting Ensemble (F1: <strong id="metric-class-f1">87.66%</strong>)</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 88.35%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card" id="card-ner">
+                            <div class="card-header">
+                                <span>Named Entity Extraction</span>
+                                <i class="fa-solid fa-signature ner-icon"></i>
+                            </div>
+                            <div class="metric-value" id="metric-ner-accuracy">93.50%</div>
+                            <p class="metric-desc">DistilBERT Token Classifier (F1: <strong id="metric-ner-f1">47.93%</strong>)</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 93.5%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card" id="card-matching">
+                            <div class="card-header">
+                                <span>Job Matching Engine</span>
+                                <i class="fa-solid fa-code-merge match-icon"></i>
+                            </div>
+                            <div class="metric-value" id="metric-match-accuracy">82.70%</div>
+                            <p class="metric-desc">XGBoost Classifier (F1: <strong id="metric-match-f1">83.06%</strong>)</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 82.7%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card" id="card-search">
+                            <div class="card-header">
+                                <span>Semantic Job Search</span>
+                                <i class="fa-solid fa-binoculars search-icon"></i>
+                            </div>
+                            <div class="metric-value" id="metric-search-p1">100.0%</div>
+                            <p class="metric-desc">TF-IDF + SBERT Hybrid (P@3: <strong id="metric-search-p3">100.0%</strong>)</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details and Architectures -->
+                    <div class="content-row">
+                        <!-- System Overview -->
+                        <div class="detail-panel glass-panel">
+                            <h3><i class="fa-solid fa-diagram-project text-gradient-primary"></i> System Integration Map</h3>
+                            <div class="architecture-map">
+                                <div class="arch-box border-gradient">
+                                    <h4>1. Input Layer</h4>
+                                    <p>Resume Text / PDF</p>
+                                </div>
+                                <div class="arch-arrow"><i class="fa-solid fa-circle-chevron-right"></i></div>
+                                <div class="arch-box border-gradient highlighted">
+                                    <h4>2. Classification & NER</h4>
+                                    <p>Category Router & Key Attributes Tagging</p>
+                                </div>
+                                <div class="arch-arrow"><i class="fa-solid fa-circle-chevron-right"></i></div>
+                                <div class="arch-box border-gradient">
+                                    <h4>3. Match & Rank</h4>
+                                    <p>Sentence-BERT similarity + XGBoost Prediction</p>
+                                </div>
+                                <div class="arch-arrow"><i class="fa-solid fa-circle-chevron-right"></i></div>
+                                <div class="arch-box border-gradient">
+                                    <h4>4. Recommendation</h4>
+                                    <p>Job Profiles & Skill Gap Matrix Analyzer</p>
+                                </div>
+                            </div>
+                            <div class="about-suite">
+                                <p><strong>CareerMind AI</strong> is an enterprise talent orchestration suite. The system combines deep learning models (DistilBERT token and sequence classification) with statistical representations (TF-IDF keyword matching) and gradient boosted trees (XGBoost) to deliver accurate resumes assessment, profile mapping, and skill gap profiling.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations Metrics -->
+                        <div class="detail-panel glass-panel summary-sidebar">
+                            <h3><i class="fa-solid fa-award text-gradient-secondary"></i> Recommendation Scores</h3>
+                            <div class="metric-list-item">
+                                <div class="item-label">Hit Rate @ 3</div>
+                                <div class="item-value" id="metric-rec-hit3">87.50%</div>
+                            </div>
+                            <div class="metric-list-item">
+                                <div class="item-label">Hit Rate @ 5</div>
+                                <div class="item-value" id="metric-rec-hit5">100.00%</div>
+                            </div>
+                            <div class="metric-list-item">
+                                <div class="item-label">Mean Reciprocal Rank (MRR)</div>
+                                <div class="item-value" id="metric-rec-mrr">0.9000</div>
+                            </div>
+                            <div class="status-note">
+                                <p><i class="fa-solid fa-circle-info"></i> All scores are evaluated on split test sets. SBERT matching is running on CUDA GPU device acceleration for lightning-fast matching.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: RESUME ANALYZER -->
+                <section class="tab-content" id="tab-analyzer">
+                    <div class="editor-layout">
+                        <!-- Input Section -->
+                        <div class="panel-column glass-panel">
+                            <div class="panel-header-actions">
+                                <h3><i class="fa-solid fa-keyboard"></i> Paste Resume Text</h3>
+                                <button class="btn-secondary btn-small" id="btn-clear-resume">Clear</button>
+                            </div>
+                            <textarea id="analyzer-resume-input" placeholder="Paste full resume text here to analyze..." class="custom-textarea"></textarea>
+                            <div class="form-actions">
+                                <button class="btn-primary" id="btn-run-analyzer">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Run Deep Analysis
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Output Section -->
+                        <div class="panel-column glass-panel" id="analyzer-output-container">
+                            <div class="analyzer-empty-state" id="analyzer-placeholder">
+                                <i class="fa-solid fa-wand-magic"></i>
+                                <h4>Ready for Analysis</h4>
+                                <p>Paste a resume on the left and click "Run Deep Analysis" to classify, parse entities, and get recommendations.</p>
+                            </div>
+
+                            <div class="analyzer-results hidden" id="analyzer-results-wrapper">
+                                <!-- Top Classification Row -->
+                                <div class="result-card category-result">
+                                    <div class="result-card-inner">
+                                        <div>
+                                            <label class="section-tag">CLASSIFIED CATEGORY</label>
+                                            <h3 id="analyzer-class-title">Software Developer</h3>
+                                        </div>
+                                        <div class="confidence-gauge">
+                                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                <path id="analyzer-class-circle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                <text x="18" y="20.35" class="percentage" id="analyzer-class-percentage">0%</text>
+                                            </svg>
+                                            <span class="label">Confidence</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- NER Entities Section -->
+                                <div class="result-card">
+                                    <label class="section-tag">EXTRACTED KEY ENTITIES</label>
+                                    <div class="entity-legend">
+                                        <span class="entity-badge ent-name">NAME</span>
+                                        <span class="entity-badge ent-email">EMAIL</span>
+                                        <span class="entity-badge ent-degree">DEGREE</span>
+                                        <span class="entity-badge ent-college">COLLEGE</span>
+                                        <span class="entity-badge ent-designation">DESIGNATION</span>
+                                        <span class="entity-badge ent-skills">SKILL</span>
+                                        <span class="entity-badge ent-experience">EXPERIENCE</span>
+                                        <span class="entity-badge ent-location">LOCATION</span>
+                                    </div>
+                                    <div id="analyzer-ner-text" class="ner-highlighted-text">
+                                        <!-- Highlighted content dynamically rendered -->
+                                    </div>
+                                </div>
+
+                                <!-- Career Recommendations Section -->
+                                <div class="result-card">
+                                    <label class="section-tag">COMPATIBLE CAREER ROLES & SKILL GAP ANALYSIS</label>
+                                    <div id="analyzer-recs-list" class="recs-grid">
+                                        <!-- Career Recommendations dynamically rendered -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: JOB MATCHER -->
+                <section class="tab-content" id="tab-matcher">
+                    <div class="editor-layout">
+                        <!-- Inputs Panel -->
+                        <div class="panel-column glass-panel">
+                            <h3><i class="fa-solid fa-briefcase"></i> Job Match Profile</h3>
+                            
+                            <div class="input-group">
+                                <label for="matcher-resume-input">Candidate Resume</label>
+                                <textarea id="matcher-resume-input" placeholder="Paste candidate's resume text..." class="custom-textarea medium-height"></textarea>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="matcher-job-input">Job Description</label>
+                                <textarea id="matcher-job-input" placeholder="Paste the job description details..." class="custom-textarea medium-height"></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="matcher-skills-input">Required Skills (Optional JSON Array)</label>
+                                <input type="text" id="matcher-skills-input" value='["Python", "Java", "Docker", "Kubernetes", "Microservices"]' class="custom-input">
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn-primary" id="btn-run-matcher">
+                                    <i class="fa-solid fa-arrows-spin"></i> Evaluate Fitment Match
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Panel -->
+                        <div class="panel-column glass-panel" id="matcher-output-container">
+                            <div class="analyzer-empty-state" id="matcher-placeholder">
+                                <i class="fa-solid fa-code-compare"></i>
+                                <h4>XGBoost Match Profiler</h4>
+                                <p>Evaluate resume-to-job similarity, compute specific skill coverage, and predict hiring fitment.</p>
+                            </div>
+
+                            <div class="matcher-results hidden" id="matcher-results-wrapper">
+                                <div class="match-summary-card" id="match-status-card">
+                                    <div class="match-badge" id="match-status-badge">MATCHED</div>
+                                    <div class="match-gauge-wrapper">
+                                        <svg viewBox="0 0 36 36" class="circular-chart large">
+                                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <path id="match-probability-circle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <text x="18" y="20.35" class="percentage" id="match-probability-text">0%</text>
+                                        </svg>
+                                        <span class="label">Fitment Score</span>
+                                    </div>
+                                </div>
+
+                                <div class="result-card">
+                                    <label class="section-tag">Matched Required Skills</label>
+                                    <div id="match-skills-list" class="skills-overlap-container">
+                                        <!-- Dynamic skills tag list -->
+                                    </div>
+                                </div>
+
+                                <div class="result-card">
+                                    <label class="section-tag">Fitment Explanation</label>
+                                    <p class="explanation-text">The XGBoost classifier processes custom interaction vectors constructed from 384-dimensional Sentence-BERT embeddings (calculating cosine distance and absolute difference) combined with exact skill overlap checks. A fitment score above 50% classifies the applicant as matching.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: JOB SEARCH -->
+                <section class="tab-content" id="tab-search">
+                    <div class="search-layout">
+                        <!-- Search Bar -->
+                        <div class="search-bar-panel glass-panel">
+                            <div class="search-input-wrapper">
+                                <i class="fa-solid fa-magnifying-glass search-bar-icon"></i>
+                                <input type="text" id="search-query-input" placeholder="Search jobs semantically (e.g. 'Senior Java developer with AWS experience' or 'tax specialist')..." value="python backend software developer">
+                                <button class="btn-primary" id="btn-run-search">Search Descriptions</button>
+                            </div>
+                            <div class="search-sliders">
+                                <div class="slider-group">
+                                    <label>SBERT Semantic Weight: <span id="weight-sbert-val">0.5</span></label>
+                                    <input type="range" id="slider-weight-sbert" min="0" max="1" step="0.1" value="0.5" class="custom-slider">
+                                </div>
+                                <div class="slider-group">
+                                    <label>TF-IDF Keyword Weight: <span id="weight-tfidf-val">0.5</span></label>
+                                    <input type="range" id="slider-weight-tfidf" min="0" max="1" step="0.1" value="0.5" class="custom-slider">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results List -->
+                        <div class="search-results-panel glass-panel">
+                            <div class="results-header">
+                                <h3><i class="fa-solid fa-list-check"></i> Matching Job Profiles</h3>
+                                <span class="badge" id="search-results-count">0 Results</span>
+                            </div>
+                            
+                            <div id="search-results-list" class="search-list">
+                                <!-- Dynamic job search items render -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Samples Overlay Drawer -->
+    <div class="drawer-overlay" id="samples-drawer">
+        <div class="drawer-content">
+            <div class="drawer-header">
+                <h3><i class="fa-solid fa-database"></i> Pre-loaded Samples</h3>
+                <button class="close-btn" id="btn-close-samples">&times;</button>
+            </div>
+            
+            <div class="drawer-body">
+                <div class="sample-section">
+                    <h4><i class="fa-solid fa-user-tie"></i> Resumes</h4>
+                    <div class="sample-btn-group">
+                        <button class="sample-btn" data-type="resume" data-id="dev">Software Developer</button>
+                        <button class="sample-btn" data-type="resume" data-id="acct">Corporate Accountant</button>
+                        <button class="sample-btn" data-type="resume" data-id="hr">HR Manager</button>
+                        <button class="sample-btn" data-type="resume" data-id="ner-test">NER Demo Resume</button>
+                    </div>
+                </div>
+
+                <div class="sample-section">
+                    <h4><i class="fa-solid fa-briefcase"></i> Job Descriptions</h4>
+                    <div class="sample-btn-group">
+                        <button class="sample-btn" data-type="job" data-id="dev">Backend Dev (Python/Java)</button>
+                        <button class="sample-btn" data-type="job" data-id="acct">Corporate Auditor (Accounting)</button>
+                        <button class="sample-btn" data-type="job" data-id="hr">Talent Acquisition Specialist</button>
+                    </div>
+                </div>
+            </div>
+            <div class="drawer-footer">
+                <p>Click a sample button to auto-fill inputs in the currently active tab.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Entrypoint -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
