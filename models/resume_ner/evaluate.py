@@ -99,8 +99,8 @@ class NERDataset(torch.utils.data.Dataset):
 
 def main():
     print("Loading NER model and test dataset for evaluation...")
-    model_dir = r"c:\CareerMind_AI\models\resume_ner"
-    test_json = r"c:\CareerMind_AI\preprocessing\splits\ner\test.json"
+    model_dir = r"c:\career iq\models\resume_ner"
+    test_json = r"c:\career iq\preprocessing\splits\ner\test.json"
     
     if not (os.path.exists(model_dir) and os.path.exists(test_json)):
         print("Error: NER model directory or test dataset not found.")

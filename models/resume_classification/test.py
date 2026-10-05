@@ -8,7 +8,7 @@ def softmax(x):
     return e_x / e_x.sum(axis=-1, keepdims=True)
 
 class ResumeClassifier:
-    def __init__(self, model_dir=r"c:\CareerMind_AI\models\resume_classification"):
+    def __init__(self, model_dir=r"c:\career iq\models\resume_classification"):
         self.model_dir = model_dir
         pipeline_path = os.path.join(model_dir, "classification_pipeline.joblib")
         

@@ -15,7 +15,7 @@ def clean_text(text):
 def main():
     print("Starting preprocessing for resume classification dataset...")
     
-    input_csv = r"c:\CareerMind_AI\datasets\resume_classification_dataset\Resume\Resume.csv"
+    input_csv = r"c:\career iq\datasets\resume_classification_dataset\Resume\Resume.csv"
     if not os.path.exists(input_csv):
         print(f"Error: Input file {input_csv} does not exist.")
         return
@@ -39,11 +39,11 @@ def main():
     df['label'] = df['Category'].map(label_to_id)
     
     # Ensure save directory exists
-    output_dir = r"c:\CareerMind_AI\preprocessing\splits\classification"
+    output_dir = r"c:\career iq\preprocessing\splits\classification"
     os.makedirs(output_dir, exist_ok=True)
     
     # Save label map to model dir and preprocessing splits dir
-    model_dir = r"c:\CareerMind_AI\models\resume_classification"
+    model_dir = r"c:\career iq\models\resume_classification"
     os.makedirs(model_dir, exist_ok=True)
     
     with open(os.path.join(model_dir, "label_map.json"), "w") as f:

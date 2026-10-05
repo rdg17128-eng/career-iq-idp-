@@ -107,8 +107,8 @@ from transformers import EarlyStoppingCallback
 
 def main():
     print("Loading NER training configuration...")
-    splits_dir = r"c:\CareerMind_AI\preprocessing\splits\ner"
-    model_dir = r"c:\CareerMind_AI\models\resume_ner"
+    splits_dir = r"c:\career iq\preprocessing\splits\ner"
+    model_dir = r"c:\career iq\models\resume_ner"
     
     train_json = os.path.join(splits_dir, "train.json")
     val_json = os.path.join(splits_dir, "val.json")

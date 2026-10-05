@@ -3,7 +3,7 @@ import torch
 from transformers import pipeline
 
 class ResumeNERExtractor:
-    def __init__(self, model_dir=r"c:\CareerMind_AI\models\resume_ner"):
+    def __init__(self, model_dir=r"c:\career iq\models\resume_ner"):
         self.model_dir = model_dir
         # Detect and use GPU if available
         device = 0 if torch.cuda.is_available() else -1

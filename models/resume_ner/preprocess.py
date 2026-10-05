@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 def main():
     print("Starting preprocessing for resume NER dataset...")
     
-    input_json = r"c:\CareerMind_AI\datasets\resume_ner_dataset\train\train_data.json"
+    input_json = r"c:\career iq\datasets\resume_ner_dataset\train\train_data.json"
     if not os.path.exists(input_json):
         print(f"Error: Input file {input_json} does not exist.")
         return
@@ -35,8 +35,8 @@ def main():
     id_to_label = {i: tag for i, tag in enumerate(bio_tags)}
     
     # Create output directories
-    output_dir = r"c:\CareerMind_AI\preprocessing\splits\ner"
-    model_dir = r"c:\CareerMind_AI\models\resume_ner"
+    output_dir = r"c:\career iq\preprocessing\splits\ner"
+    model_dir = r"c:\career iq\models\resume_ner"
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(model_dir, exist_ok=True)
     

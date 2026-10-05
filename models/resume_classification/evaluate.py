@@ -14,8 +14,8 @@ def softmax(x):
 def main():
     print("Loading model and test dataset for evaluation...")
     
-    model_dir = r"c:\CareerMind_AI\models\resume_classification"
-    splits_dir = r"c:\CareerMind_AI\preprocessing\splits\classification"
+    model_dir = r"c:\career iq\models\resume_classification"
+    splits_dir = r"c:\career iq\preprocessing\splits\classification"
     test_csv = os.path.join(splits_dir, "test.csv")
     
     svm_path = os.path.join(model_dir, "tfidf_svm", "classification_pipeline.joblib")

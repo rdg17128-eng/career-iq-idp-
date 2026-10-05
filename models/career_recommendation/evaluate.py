@@ -9,8 +9,8 @@ def clean_title(title):
 def main():
     print("Initializing Career Role/Skill Recommendation evaluation...")
     
-    test_json_path = r"c:\CareerMind_AI\datasets\career_role_skill_dataset\test_resumes.json"
-    model_dir = r"c:\CareerMind_AI\models\career_recommendation"
+    test_json_path = r"c:\career iq\datasets\career_role_skill_dataset\test_resumes.json"
+    model_dir = r"c:\career iq\models\career_recommendation"
     
     if not os.path.exists(test_json_path):
         print(f"Error: Test resumes not found at {test_json_path}")

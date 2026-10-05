@@ -13,7 +13,7 @@ class CareerRoleRecommender:
         self.model_dir = model_dir
         
         # Ensure job_roles.csv is copied locally
-        src_csv = r"c:\CareerMind_AI\datasets\career_role_skill_dataset\job_roles.csv"
+        src_csv = r"c:\career iq\datasets\career_role_skill_dataset\job_roles.csv"
         self.db_path = os.path.join(model_dir, "job_roles.csv")
         if os.path.exists(src_csv) and not os.path.exists(self.db_path):
             print(f"[Recommender] Copying job roles database to {self.db_path}...")

@@ -15,7 +15,7 @@ def is_relevant(query, job_title):
 def main():
     print("Initializing Job Description Search evaluation...")
     
-    model_dir = r"c:\CareerMind_AI\models\job_search"
+    model_dir = r"c:\career iq\models\job_search"
     searcher = JobSearchEngine(model_dir=model_dir)
     
     test_queries = [

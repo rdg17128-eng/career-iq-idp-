@@ -60,8 +60,8 @@ def compute_metrics(pred):
 
 def main():
     print("Loading classification configuration...")
-    splits_dir = r"c:\CareerMind_AI\preprocessing\splits\classification"
-    model_dir = r"c:\CareerMind_AI\models\resume_classification"
+    splits_dir = r"c:\career iq\preprocessing\splits\classification"
+    model_dir = r"c:\career iq\models\resume_classification"
     
     train_csv = os.path.join(splits_dir, "train.csv")
     val_csv = os.path.join(splits_dir, "val.csv")

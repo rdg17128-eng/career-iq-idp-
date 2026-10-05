@@ -136,9 +136,9 @@ def main():
     print("Initializing Resume-Job Matching training...")
     
     # Paths
-    jobs_csv = r"c:\CareerMind_AI\datasets\job_matching_dataset\all_job_post.csv"
-    resumes_csv = r"c:\CareerMind_AI\datasets\resume_classification_dataset\Resume\Resume.csv"
-    model_dir = r"c:\CareerMind_AI\models\job_matching"
+    jobs_csv = r"c:\career iq\datasets\job_matching_dataset\all_job_post.csv"
+    resumes_csv = r"c:\career iq\datasets\resume_classification_dataset\Resume\Resume.csv"
+    model_dir = r"c:\career iq\models\job_matching"
     
     if not (os.path.exists(jobs_csv) and os.path.exists(resumes_csv)):
         print("Error: Missing job post dataset or resume dataset.")

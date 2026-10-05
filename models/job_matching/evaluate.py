@@ -7,7 +7,7 @@ from xgboost import XGBClassifier
 def main():
     print("Initializing Resume-Job Matching evaluation...")
     
-    model_dir = r"c:\CareerMind_AI\models\job_matching"
+    model_dir = r"c:\career iq\models\job_matching"
     test_split_path = os.path.join(model_dir, "preprocessing", "test_split.joblib")
     xgb_path = os.path.join(model_dir, "xgboost", "matching_xgboost.json")
     

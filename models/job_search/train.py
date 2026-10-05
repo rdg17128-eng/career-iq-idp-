@@ -16,8 +16,8 @@ def main():
     print("Initializing Job Description Search indexing...")
     
     # Paths
-    src_csv = r"c:\CareerMind_AI\datasets\job_description_dataset\data.csv"
-    model_dir = r"c:\CareerMind_AI\models\job_search"
+    src_csv = r"c:\career iq\datasets\job_description_dataset\data.csv"
+    model_dir = r"c:\career iq\models\job_search"
     
     if not os.path.exists(src_csv):
         print(f"Error: Source dataset not found at {src_csv}")
