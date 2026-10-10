@@ -11,20 +11,36 @@
 
 ---
 
-## 🌟 Key Features & Machine Learning Engines
+## 🌟 End-to-End Application Workflow
+
+Career IQ provides a complete, 8-step talent intelligence and career readiness lifecycle:
+
+```mermaid
+flowchart TD
+    S1["1. Upload Resume<br/>(PDF / DOCX Extractor)"] --> S2["2. Resume Processing & NER<br/>(Skills, Edu, Exp, Projects, Certs, Roles)"]
+    S2 --> S3["3. Resume Analysis & ATS Evaluation<br/>(Structure, Strengths, Weaknesses, ATS Score)"]
+    S3 --> S4["4. Resume Optimization<br/>(Tailored Bullet Points & Clean DOCX Export)"]
+    S4 --> S5A["5A. Career Recommendation<br/>(Roles & Missing Skills)"]
+    S4 --> S5B["5B. Job Matching<br/>(SBERT + XGBoost Fitment Scores)"]
+    S5A --> S6["6. Personalized AI Voice Interview<br/>(Role Questions + TTS Voice + STT Mic)"]
+    S5B --> S6
+    S6 --> S7["7. AI Answer Evaluation<br/>(Technical, Relevance, Communication & Follow-up)"]
+    S7 --> S8["8. Final Career Readiness Report<br/>(ATS, Match, Interview Metrics & PDF/JSON Audit)"]
+```
 
 ```
-                                  ┌────────────────────────┐
-                                  │   Career IQ Platform   │
-                                  └───────────┬────────────┘
-                                              │
-         ┌──────────────────┬─────────────────┼─────────────────┬──────────────────┐
-         ▼                  ▼                 ▼                 ▼                  ▼
-┌─────────────────┐ ┌───────────────┐ ┌───────────────┐ ┌───────────────┐ ┌─────────────────┐
-│ 1. Resume       │ │ 2. Resume NER │ │ 3. Job        │ │ 4. Hybrid     │ │ 5. Career       │
-│    Classifier   │ │    Extractor  │ │    Matcher    │ │    Search     │ │    Recommender  │
-│ (DistilBERT+SVM)│ │ (Transformer) │ │ (SBERT+XGB)   │ │ (TF-IDF+SBERT)│ │ (Skill-Graph)   │
-└─────────────────┘ └───────────────┘ └───────────────┘ └───────────────┘ └─────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   CAREER IQ 8-STEP WORKFLOW LIFECYCLE                                  │
+├────────────────────┬────────────────────┬────────────────────┬────────────────────┬────────────────────┤
+│ 1. Upload Resume   │ 2. Processing/NER  │ 3. ATS Evaluation  │ 4. Resume Optimize │ 5. Role Match & Rec│
+│  • PDF / DOCX      │  • Transformer NER │  • Structure Health│  • Job Tailored    │  • 5A: Career Recs │
+│  • Binary Parsers  │  • Skills & Degrees│  • Red Flags & Gaps│  • Zero Hallucin.  │  • 5B: SBERT+XGB   │
+├────────────────────┴────────────────────┼────────────────────┴────────────────────┴────────────────────┤
+│ 6. AI Voice Interview                   │ 7. AI Answer Evaluation            │ 8. Readiness Report   │
+│  • Role-specific questions              │  • Technical Correctness / Depth   │  • Unified Readiness  │
+│  • Web Speech TTS (Voice Output)        │  • Clarity, Conciseness & Fillers  │  • Actionable Roadmap │
+│  • Microphone STT (Spoken to Text)      │  • Dynamic Follow-up Probing       │  • PDF / JSON Audit   │
+└─────────────────────────────────────────┴────────────────────────────────────┴───────────────────────┘
 ```
 
 ### 1. 📄 Resume Domain Classification

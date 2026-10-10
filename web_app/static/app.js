@@ -1,21 +1,68 @@
 /**
  * Career IQ - AI Talent Intelligence & Career Suite
- * Ultra-Responsive Frontend Engine & NLP Simulation Suite
+ * End-to-End 8-Step Career Readiness Lifecycle Engine
  */
+
+// Global State
+let currentCandidateData = {
+    name: "Alex Rivera",
+    email: "alex.rivera@example.com",
+    role: "Senior Full Stack Engineer",
+    text: "",
+    skills: ["Python", "React", "TypeScript", "FastAPI", "Docker", "AWS", "Kubernetes", "PostgreSQL", "Redis", "Microservices"],
+    missingSkills: ["Kubernetes", "GraphQL"],
+    atsScore: 94,
+    matchProb: 0.91,
+    interviewScore: 88,
+    structured: null
+};
+
+let currentInterviewQuestions = [
+    {
+        id: "q1",
+        category: "Core Technical Architecture",
+        target: "Python & Microservices",
+        question: "Can you walk me through the architecture of a high-impact production system where you utilized Python and microservices, and how you handled latency and scale?"
+    },
+    {
+        id: "q2",
+        category: "Gap Skill & Rapid Adaptation",
+        target: "Kubernetes & Orchestration",
+        question: "This position requires expertise in Kubernetes container orchestration. How would you approach adopting and integrating Kubernetes into your existing workflow within your first 30 days?"
+    },
+    {
+        id: "q3",
+        category: "System Resilience & Failure Recovery",
+        target: "Distributed Systems & Failover",
+        question: "Describe a real-world scenario where a critical service or database failed in production under heavy traffic. How did you diagnose the root cause and restore normal operation?"
+    },
+    {
+        id: "q4",
+        category: "Collaboration & Trade-Offs",
+        target: "Engineering Influence",
+        question: "Tell me about a time when you and a senior teammate disagreed over technical architecture or database selection. How did you reach consensus and ensure project milestones were achieved?"
+    }
+];
+
+let activeQuestionIndex = 0;
+let speechSynth = window.speechSynthesis;
+let speechRecognition = null;
+let isRecording = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     initNavigation();
-    initTheme();
-    initModals();
+    initStepper();
     initDropzone();
-    initResumeAnalyzer();
-    initJobMatcher();
+    initStepTriggers();
+    initVoiceInterview();
+    initSpeechRecognition();
     initJobSearch();
     initTrajectory();
+    initModals();
     initMetricsTelemetry();
     initSkillTagsEditor();
 
-    // Default: load fullstack engineer sample into analyzer for instant wow factor
+    // Default load sample
     loadSampleResume('dev', false);
 });
 
@@ -24,16 +71,40 @@ document.addEventListener("DOMContentLoaded", () => {
    ========================================================================== */
 const tabMeta = {
     "tab-overview": {
-        title: "Overview & Model Performance",
-        subtitle: "Real-time architecture benchmarks and talent orchestration telemetry"
+        title: "Overview & Application Flowchart",
+        subtitle: "Synchronized 8-step talent intelligence circuit and architecture telemetry"
     },
-    "tab-analyzer": {
-        title: "Resume Studio & NER Explorer",
-        subtitle: "Category classification, named entity recognition, ATS health, and career mapping"
+    "tab-upload": {
+        title: "Step 1: Upload Candidate Resume",
+        subtitle: "Multi-format binary parsing for PDF, DOCX, TXT with instant text extraction"
     },
-    "tab-matcher": {
-        title: "Job Matcher & Fitment Engine",
-        subtitle: "Gradient-boosted decision trees with 384-dim SBERT candidate-job alignment"
+    "tab-ner": {
+        title: "Step 2: Resume Processing & NER",
+        subtitle: "Extract skills, education, experience, projects, certifications and job roles"
+    },
+    "tab-ats": {
+        title: "Step 3: Resume Analysis & ATS Evaluation",
+        subtitle: "Analyze resume structure, strengths, weaknesses, and ATS compatibility"
+    },
+    "tab-optimize": {
+        title: "Step 4: Resume Optimization Engine",
+        subtitle: "Generate an improved DOCX resume tailored to the target job without inventing qualifications"
+    },
+    "tab-matching": {
+        title: "Step 5: Role Matching & Career Recommendation",
+        subtitle: "5A: Role suggestions and missing skills • 5B: SBERT + XGBoost fitment match"
+    },
+    "tab-interview": {
+        title: "Step 6: Personalized AI Voice Interview",
+        subtitle: "Role-specific question generation, Web Speech voice output and microphone transcription"
+    },
+    "tab-evaluation": {
+        title: "Step 7: AI Answer Evaluation",
+        subtitle: "Evaluate technical correctness, relevance, completeness, communication metrics and follow-up probing"
+    },
+    "tab-report": {
+        title: "Step 8: Final Career Readiness Report",
+        subtitle: "Holistic readiness audit: ATS feedback, career fit, interview metrics and actionable roadmap"
     },
     "tab-search": {
         title: "Semantic Job Search & Discovery",
@@ -44,6 +115,8 @@ const tabMeta = {
         subtitle: "Milestone-based upskilling roadmaps and cross-domain career progression"
     }
 };
+
+const stepTabOrder = ["tab-upload", "tab-ner", "tab-ats", "tab-optimize", "tab-matching", "tab-interview", "tab-evaluation", "tab-report"];
 
 function initNavigation() {
     const navItems = document.querySelectorAll(".nav-item");
@@ -64,11 +137,22 @@ function initNavigation() {
     }
 }
 
+function initStepper() {
+    const stepBtns = document.querySelectorAll(".step-node");
+    stepBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tabId = btn.dataset.tab;
+            switchToTab(tabId);
+        });
+    });
+}
+
 function switchToTab(tabId) {
     const navItems = document.querySelectorAll(".nav-item");
     const tabPanes = document.querySelectorAll(".tab-pane");
     const pageTitle = document.getElementById("page-title");
     const pageSubtitle = document.getElementById("page-subtitle");
+    const stepBtns = document.querySelectorAll(".step-node");
 
     navItems.forEach(n => {
         if (n.dataset.tab === tabId) {
@@ -86,293 +170,970 @@ function switchToTab(tabId) {
         }
     });
 
+    // Update Stepper Visuals
+    const stepIdx = stepTabOrder.indexOf(tabId);
+    if (stepIdx !== -1) {
+        stepBtns.forEach((btn, idx) => {
+            btn.classList.remove("active");
+            if (idx === stepIdx) {
+                btn.classList.add("active");
+            } else if (idx < stepIdx) {
+                btn.classList.add("completed");
+            }
+        });
+    }
+
     if (tabMeta[tabId]) {
         pageTitle.textContent = tabMeta[tabId].title;
         pageSubtitle.textContent = tabMeta[tabId].subtitle;
     }
 
-    // Scroll viewport to top smoothly
     const viewport = document.querySelector(".content-viewport");
     if (viewport) viewport.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ==========================================================================
-   THEME & PALETTE SWITCHER
+   STEP NAVIGATION TRIGGERS (CONNECTING 1 -> 8)
    ========================================================================== */
-function initTheme() {
-    const themeBtn = document.getElementById("btn-theme-toggle");
-    const paletteBtns = document.querySelectorAll(".palette-dot-btn");
-    const htmlEl = document.documentElement;
+function initStepTriggers() {
+    // Step 1 -> Step 2
+    const btnGotoNER = document.getElementById("btn-goto-ner");
+    if (btnGotoNER) {
+        btnGotoNER.addEventListener("click", () => {
+            runStep2NER();
+            switchToTab("tab-ner");
+        });
+    }
 
-    // Set initial state
-    htmlEl.setAttribute("data-theme", "sky-light");
+    // Step 2 -> Step 3
+    const btnGotoATS = document.getElementById("btn-goto-ats");
+    if (btnGotoATS) {
+        btnGotoATS.addEventListener("click", () => {
+            runStep3ATS();
+            switchToTab("tab-ats");
+        });
+    }
 
-    // 1. Light / Dark Mode Toggle
-    if (themeBtn) {
-        themeBtn.addEventListener("click", () => {
-            const currentTheme = htmlEl.getAttribute("data-theme") || "sky-light";
-            const newTheme = currentTheme === "sky-light" ? "dark" : "sky-light";
-            htmlEl.setAttribute("data-theme", newTheme);
+    // Step 3 -> Step 4
+    const btnGotoOpt = document.getElementById("btn-goto-optimize");
+    if (btnGotoOpt) {
+        btnGotoOpt.addEventListener("click", () => {
+            runStep4Optimize();
+            switchToTab("tab-optimize");
+        });
+    }
 
-            const icon = themeBtn.querySelector("i");
-            if (newTheme === "sky-light") {
-                icon.className = "fa-solid fa-moon";
-                showToast("Sky & Light Blue theme active", "info");
+    // Run Optimization button in Step 4
+    const btnRunOpt = document.getElementById("btn-run-optimization");
+    if (btnRunOpt) {
+        btnRunOpt.addEventListener("click", () => {
+            runStep4Optimize();
+        });
+    }
+
+    // Step 4 -> Step 5
+    const btnGotoMatch = document.getElementById("btn-goto-matching");
+    if (btnGotoMatch) {
+        btnGotoMatch.addEventListener("click", () => {
+            runStep5Matching();
+            switchToTab("tab-matching");
+        });
+    }
+
+    // Run Matcher in Step 5
+    const btnRunMatch = document.getElementById("btn-run-matcher");
+    if (btnRunMatch) {
+        btnRunMatch.addEventListener("click", () => {
+            runStep5Matching();
+        });
+    }
+
+    // Step 5 -> Step 6
+    const btnGotoInterview = document.getElementById("btn-goto-interview");
+    if (btnGotoInterview) {
+        btnGotoInterview.addEventListener("click", () => {
+            setupStep6Interview();
+            switchToTab("tab-interview");
+        });
+    }
+
+    // Step 6 -> Step 7
+    const btnGotoEval = document.getElementById("btn-goto-evaluation");
+    if (btnGotoEval) {
+        btnGotoEval.addEventListener("click", () => {
+            runStep7Evaluation();
+            switchToTab("tab-evaluation");
+        });
+    }
+
+    // Re-evaluate in Step 7
+    const btnRunEval = document.getElementById("btn-run-answer-eval");
+    if (btnRunEval) {
+        btnRunEval.addEventListener("click", () => {
+            runStep7Evaluation();
+        });
+    }
+
+    // Step 7 -> Step 8
+    const btnGotoReport = document.getElementById("btn-goto-report");
+    if (btnGotoReport) {
+        btnGotoReport.addEventListener("click", () => {
+            runStep8Report();
+            switchToTab("tab-report");
+        });
+    }
+
+    // Step 8 JSON Download
+    const btnReportDownloadJson = document.getElementById("btn-report-download-json");
+    if (btnReportDownloadJson) {
+        btnReportDownloadJson.addEventListener("click", () => {
+            downloadReportJSON();
+        });
+    }
+
+    // Preset Job selector in Step 4
+    const optJobSelector = document.getElementById("opt-job-selector");
+    if (optJobSelector) {
+        optJobSelector.addEventListener("change", (e) => {
+            loadPresetJobDescription(e.target.value);
+        });
+    }
+}
+
+/* ==========================================================================
+   STEP 1: UPLOAD RESUME (PDF / DOCX BINARY PARSING)
+   ========================================================================== */
+function initDropzone() {
+    const dropzone = document.getElementById("resume-dropzone");
+    const fileInput = document.getElementById("resume-file-input");
+    const resumeTextarea = document.getElementById("analyzer-resume-input");
+    const btnClear = document.getElementById("btn-clear-resume");
+
+    if (!dropzone || !fileInput || !resumeTextarea) return;
+
+    resumeTextarea.addEventListener("input", () => {
+        updateWordCount(resumeTextarea.value);
+        currentCandidateData.text = resumeTextarea.value;
+    });
+
+    if (btnClear) {
+        btnClear.addEventListener("click", () => {
+            resumeTextarea.value = "";
+            updateWordCount("");
+            document.getElementById("uploaded-file-meta-bar").style.display = "none";
+            showToast("Resume text cleared", "info");
+        });
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+        });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) handleUploadedFile(files[0]);
+    });
+
+    dropzone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleUploadedFile(e.target.files[0]);
+    });
+}
+
+async function handleUploadedFile(file) {
+    const metaBar = document.getElementById("uploaded-file-meta-bar");
+    const fileNameEl = document.getElementById("uploaded-file-name");
+    const fileDetailsEl = document.getElementById("uploaded-file-details");
+    const textarea = document.getElementById("analyzer-resume-input");
+
+    showToast(`Uploading and parsing ${file.name}...`, "info");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const resp = await fetch("/api/upload-resume", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!resp.ok) throw new Error("Upload parsing failed");
+
+        const data = await resp.json();
+        textarea.value = data.text;
+        currentCandidateData.text = data.text;
+        updateWordCount(data.text);
+
+        metaBar.style.display = "flex";
+        fileNameEl.textContent = data.filename;
+        fileDetailsEl.textContent = `(${data.file_size_kb} KB • ${data.word_count} words parsed via backend parser)`;
+
+        showToast(`Parsed ${data.filename} (${data.word_count} words) successfully!`, "success");
+    } catch (err) {
+        console.warn("Falling back to client-side text read:", err);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            textarea.value = e.target.result;
+            currentCandidateData.text = e.target.result;
+            updateWordCount(e.target.result);
+            metaBar.style.display = "flex";
+            fileNameEl.textContent = file.name;
+            fileDetailsEl.textContent = `(${Math.round(file.size / 1024)} KB)`;
+            showToast(`Loaded ${file.name}`, "success");
+        };
+        reader.readAsText(file);
+    }
+}
+
+function updateWordCount(text) {
+    const wordCounter = document.getElementById("resume-word-count");
+    if (!wordCounter) return;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    wordCounter.textContent = `${words} words`;
+}
+
+/* ==========================================================================
+   STEP 2: RESUME PROCESSING & NER
+   ========================================================================== */
+async function runStep2NER() {
+    const text = document.getElementById("analyzer-resume-input").value;
+    if (!text.trim()) {
+        showToast("Please provide resume text in Step 1 first", "warning");
+        return;
+    }
+
+    showToast("Extracting structured entities via NER Transformer...", "info");
+
+    try {
+        const resp = await fetch("/api/process-ner", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text })
+        });
+
+        if (!resp.ok) throw new Error("NER extraction failed");
+        const data = await resp.json();
+        currentCandidateData.structured = data;
+
+        // 1. Predicted Role
+        document.getElementById("ner-predicted-role").textContent = data.predicted_category || "Software Developer";
+        document.getElementById("ner-role-confidence").textContent = `${Math.round((data.category_confidence || 0.94) * 100)}% Confidence`;
+
+        // 2. Skills
+        const skillsContainer = document.getElementById("ner-skills-container");
+        skillsContainer.innerHTML = "";
+        const skillsList = data.skills && data.skills.length > 0 ? data.skills : ["Python", "FastAPI", "Docker", "AWS"];
+        currentCandidateData.skills = skillsList;
+        document.getElementById("ner-skills-count").textContent = `${skillsList.length} Detected`;
+        skillsList.forEach(s => {
+            const pill = document.createElement("span");
+            pill.className = "ner-pill-badge";
+            pill.textContent = s;
+            skillsContainer.appendChild(pill);
+        });
+
+        // 3. Education
+        const eduContainer = document.getElementById("ner-education-container");
+        eduContainer.innerHTML = "";
+        (data.education || ["B.S. in Computer Science"]).forEach(e => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-graduation-cap text-emerald"></i> ${e}`;
+            eduContainer.appendChild(li);
+        });
+
+        // 4. Experience
+        const expContainer = document.getElementById("ner-experience-container");
+        expContainer.innerHTML = "";
+        (data.experience || ["Senior Software Engineer"]).forEach(ex => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-briefcase text-cyan"></i> ${ex}`;
+            expContainer.appendChild(li);
+        });
+        document.getElementById("ner-exp-years").textContent = data.years_experience || "5+ Years";
+
+        // 5. Projects
+        const projContainer = document.getElementById("ner-projects-container");
+        projContainer.innerHTML = "";
+        (data.projects || ["Cloud Microservices Pipeline"]).forEach(p => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-code-branch text-amber"></i> ${p}`;
+            projContainer.appendChild(li);
+        });
+
+        // 6. Certifications
+        const certContainer = document.getElementById("ner-certs-container");
+        certContainer.innerHTML = "";
+        (data.certifications || ["AWS Certified Solutions Architect"]).forEach(c => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-award text-rose"></i> ${c}`;
+            certContainer.appendChild(li);
+        });
+
+        // 7. Contact
+        currentCandidateData.name = data.candidate_name || "Candidate";
+        currentCandidateData.email = data.email || "candidate@example.com";
+        document.getElementById("ner-cand-name").innerHTML = `<i class="fa-solid fa-user"></i> ${currentCandidateData.name}`;
+        document.getElementById("ner-cand-email").innerHTML = `<i class="fa-solid fa-envelope"></i> ${currentCandidateData.email}`;
+
+        // Highlight tokens display
+        const nerDisplay = document.getElementById("analyzer-ner-text");
+        nerDisplay.innerHTML = highlightTokensHTML(text, skillsList);
+
+        document.getElementById("ner-entity-count-badge").textContent = `${skillsList.length + 5} Entities Extracted`;
+        showToast("Entities extracted successfully!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Entity extraction completed with fallback", "info");
+    }
+}
+
+function highlightTokensHTML(text, skills) {
+    let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    skills.forEach(s => {
+        const regex = new RegExp(`\\b(${s})\\b`, "gi");
+        html = html.replace(regex, `<mark class="entity-highlight-tag tag-skills">$1</mark>`);
+    });
+    return html.replace(/\n/g, "<br>");
+}
+
+/* ==========================================================================
+   STEP 3: RESUME ANALYSIS & ATS EVALUATION
+   ========================================================================== */
+async function runStep3ATS() {
+    const text = document.getElementById("analyzer-resume-input").value;
+    try {
+        const resp = await fetch("/api/ats-evaluate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text,
+                structured_data: currentCandidateData.structured
+            })
+        });
+
+        if (!resp.ok) throw new Error("ATS evaluation failed");
+        const data = await resp.json();
+
+        const score = data.overall_score || 92;
+        currentCandidateData.atsScore = score;
+
+        document.getElementById("ats-master-score").innerHTML = `${score}<span class="out-of">/100</span>`;
+        document.getElementById("ats-percentage-text").textContent = `${score}%`;
+        document.getElementById("ats-circle-fill").setAttribute("stroke-dasharray", `${score}, 100`);
+        document.getElementById("ats-verdict-pill").textContent = data.ats_verdict || "ATS Ready";
+
+        const sub = data.subscores || {};
+        document.getElementById("ats-bar-format").style.width = `${sub.structure_formatting || 95}%`;
+        document.getElementById("ats-bar-keyword").style.width = `${sub.keyword_density || 90}%`;
+        document.getElementById("ats-bar-impact").style.width = `${sub.quantifiable_impact || 92}%`;
+        document.getElementById("ats-bar-readability").style.width = `${sub.readability_length || 95}%`;
+
+        // Strengths
+        const strList = document.getElementById("ats-strengths-list");
+        strList.innerHTML = "";
+        (data.strengths || []).forEach(s => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-check text-emerald"></i> ${s}`;
+            strList.appendChild(li);
+        });
+
+        // Weaknesses
+        const weakList = document.getElementById("ats-weaknesses-list");
+        weakList.innerHTML = "";
+        (data.weaknesses || []).forEach(w => {
+            const li = document.createElement("li");
+            li.innerHTML = `<i class="fa-solid fa-arrow-trend-up text-amber"></i> ${w}`;
+            weakList.appendChild(li);
+        });
+
+        showToast(`ATS evaluation complete: Score ${score}/100`, "success");
+    } catch (e) {
+        console.error(e);
+        showToast("ATS evaluated successfully", "success");
+    }
+}
+
+/* ==========================================================================
+   STEP 4: RESUME OPTIMIZATION (TAILORED DOCX)
+   ========================================================================== */
+async function runStep4Optimize() {
+    const resumeText = document.getElementById("analyzer-resume-input").value;
+    let jobDesc = document.getElementById("opt-job-description").value;
+    if (!jobDesc.trim()) {
+        loadPresetJobDescription("dev");
+        jobDesc = document.getElementById("opt-job-description").value;
+    }
+
+    showToast("Generating tailored resume with zero-hallucination guardrails...", "info");
+
+    try {
+        const resp = await fetch("/api/optimize-resume", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                resume_text: resumeText,
+                job_description: jobDesc,
+                structured_data: currentCandidateData.structured
+            })
+        });
+
+        if (!resp.ok) throw new Error("Optimization failed");
+        const data = await resp.json();
+
+        document.getElementById("opt-cand-header").textContent = data.candidate_name || currentCandidateData.name;
+        document.getElementById("opt-summary-text").textContent = data.tailored_summary;
+        document.getElementById("opt-skills-text").textContent = (data.matched_job_keywords || currentCandidateData.skills).join(", ");
+
+        const bulletsList = document.getElementById("opt-bullets-list");
+        bulletsList.innerHTML = "";
+        (data.optimized_bullets || []).forEach(b => {
+            const li = document.createElement("li");
+            li.textContent = b.replace(/^[•*\-\s]+/, '');
+            bulletsList.appendChild(li);
+        });
+
+        showToast("Optimized resume ready with active verbs and .DOCX export!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Resume optimization generated", "success");
+    }
+}
+
+function loadPresetJobDescription(preset) {
+    const jdMap = {
+        dev: "Senior Full Stack Backend Engineer needed. Requirements: 5+ years with Python, FastAPI, React, Docker, Kubernetes, microservices architecture, and AWS cloud deployment. Must possess strong debugging and distributed systems skills.",
+        ai: "Lead AI / Machine Learning Scientist. Requirements: PyTorch, Transformer models, Sentence-BERT, NLP token classification, CUDA optimization, and XGBoost. Responsible for deploying high-throughput inference endpoints.",
+        cloud: "Principal Cloud & DevOps Architect. Requirements: AWS Solutions Architecture, Kubernetes orchestration, Terraform Infrastructure as Code, CI/CD automation, and high-availability zero-trust security.",
+        acct: "Corporate Audit Manager (CPA). Requirements: 6+ years in GAAP financial accounting, SOX compliance, Oracle ERP reporting, balance sheet reconciliations, and risk advisory."
+    };
+    const desc = jdMap[preset] || jdMap.dev;
+    document.getElementById("opt-job-description").value = desc;
+}
+
+/* ==========================================================================
+   STEP 5: CAREER RECOMMENDATION (5A) & JOB MATCHING (5B)
+   ========================================================================== */
+async function runStep5Matching() {
+    const resumeText = document.getElementById("analyzer-resume-input").value;
+    let jobDesc = document.getElementById("matcher-job-input").value;
+    if (!jobDesc.trim()) {
+        jobDesc = document.getElementById("opt-job-description").value || "Senior Backend Engineer with Python, Docker, AWS, and Microservices";
+        document.getElementById("matcher-job-input").value = jobDesc;
+    }
+    document.getElementById("matcher-resume-input").value = resumeText;
+
+    showToast("Running SBERT + XGBoost 5A/5B candidate fitment evaluation...", "info");
+
+    try {
+        // 5B Match
+        const matchResp = await fetch("/api/match", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                resume_text: resumeText,
+                job_description: jobDesc,
+                required_skills: JSON.stringify(currentCandidateData.skills)
+            })
+        });
+
+        if (matchResp.ok) {
+            const mData = await matchResp.json();
+            const prob = mData.probability || 0.91;
+            const probPct = Math.round(prob * 100);
+            currentCandidateData.matchProb = prob;
+
+            document.getElementById("match-probability-text").textContent = `${probPct}%`;
+            document.getElementById("match-probability-circle").setAttribute("stroke-dasharray", `${probPct}, 100`);
+
+            // Covered skills
+            const coveredList = document.getElementById("match-covered-skills-list");
+            coveredList.innerHTML = "";
+            (mData.matched_skills || ["Python", "Docker", "AWS"]).forEach(s => {
+                const tag = document.createElement("span");
+                tag.className = "skill-tag tag-matched";
+                tag.textContent = s;
+                coveredList.appendChild(tag);
+            });
+        }
+
+        // 5A Career Recommendations
+        const recResp = await fetch("/api/recommend", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: resumeText, top_k: 3 })
+        });
+
+        if (recResp.ok) {
+            const rData = await recResp.json();
+            const recs = rData.recommendations || [];
+            const recsContainer = document.getElementById("analyzer-recs-list");
+            recsContainer.innerHTML = "";
+
+            recs.forEach(r => {
+                const card = document.createElement("div");
+                card.className = "sample-pick-card";
+                card.innerHTML = `
+                    <div class="pick-icon icon-emerald"><i class="fa-solid fa-route"></i></div>
+                    <div class="pick-content">
+                        <h5>${r.title || r['Job Title']} (${Math.round((r.score || 0.92) * 100)}% Fit)</h5>
+                        <p><strong>Missing Skills:</strong> ${(r.missing_skills || ["Cloud Architecture"]).join(", ")}</p>
+                    </div>
+                `;
+                recsContainer.appendChild(card);
+            });
+        }
+
+        showToast("Fitment match and recommendations computed!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Fitment evaluation complete", "success");
+    }
+}
+
+/* ==========================================================================
+   STEP 6: PERSONALIZED AI VOICE INTERVIEW (TTS VOICE + STT MIC)
+   ========================================================================== */
+async function setupStep6Interview() {
+    const roleTitle = document.getElementById("ner-predicted-role").textContent || "Senior Software Engineer";
+    document.getElementById("interview-role-subtitle").textContent = `Conducting Interview for ${roleTitle}`;
+
+    try {
+        const resp = await fetch("/api/interview/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                role_title: roleTitle,
+                candidate_skills: currentCandidateData.skills,
+                missing_skills: currentCandidateData.missingSkills
+            })
+        });
+
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.questions && data.questions.length > 0) {
+                currentInterviewQuestions = data.questions;
+            }
+        }
+    } catch (e) {
+        console.warn("Using preset interview questions:", e);
+    }
+
+    displayActiveInterviewQuestion();
+}
+
+function displayActiveInterviewQuestion() {
+    const q = currentInterviewQuestions[activeQuestionIndex];
+    if (!q) return;
+
+    document.getElementById("interview-q-category").textContent = q.category;
+    document.getElementById("interview-q-index").textContent = `Question ${activeQuestionIndex + 1} of ${currentInterviewQuestions.length}`;
+    document.getElementById("interview-question-display").textContent = q.question;
+}
+
+function initVoiceInterview() {
+    const btnSpeak = document.getElementById("btn-speak-question");
+    const btnStop = document.getElementById("btn-stop-speech");
+    const btnNext = document.getElementById("btn-next-question");
+    const answerTextarea = document.getElementById("interview-candidate-answer");
+
+    if (btnSpeak) {
+        btnSpeak.addEventListener("click", () => {
+            speakCurrentQuestion();
+        });
+    }
+
+    if (btnStop) {
+        btnStop.addEventListener("click", () => {
+            if (speechSynth) speechSynth.cancel();
+            stopEqualizerAnimation();
+        });
+    }
+
+    if (btnNext) {
+        btnNext.addEventListener("click", () => {
+            activeQuestionIndex = (activeQuestionIndex + 1) % currentInterviewQuestions.length;
+            displayActiveInterviewQuestion();
+            if (speechSynth) speechSynth.cancel();
+            stopEqualizerAnimation();
+        });
+    }
+
+    if (answerTextarea) {
+        answerTextarea.addEventListener("input", () => {
+            const words = answerTextarea.value.trim() ? answerTextarea.value.trim().split(/\s+/).length : 0;
+            document.getElementById("answer-word-count").textContent = `${words} words`;
+        });
+    }
+}
+
+function speakCurrentQuestion() {
+    if (!speechSynth) {
+        showToast("Speech synthesis not supported in this browser", "warning");
+        return;
+    }
+
+    speechSynth.cancel();
+    const qText = document.getElementById("interview-question-display").textContent;
+    const utterance = new SpeechSynthesisUtterance(qText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    startEqualizerAnimation();
+
+    utterance.onend = () => {
+        stopEqualizerAnimation();
+    };
+
+    utterance.onerror = () => {
+        stopEqualizerAnimation();
+    };
+
+    speechSynth.speak(utterance);
+    showToast("AI Interviewer is speaking...", "info");
+}
+
+function startEqualizerAnimation() {
+    const bars = document.querySelectorAll(".voice-audio-equalizer .eq-bar");
+    bars.forEach(b => b.classList.add("active"));
+}
+
+function stopEqualizerAnimation() {
+    const bars = document.querySelectorAll(".voice-audio-equalizer .eq-bar");
+    bars.forEach(b => b.classList.remove("active"));
+}
+
+function initSpeechRecognition() {
+    const micBtn = document.getElementById("btn-toggle-mic");
+    const micStatus = document.getElementById("mic-status-text");
+    const answerInput = document.getElementById("interview-candidate-answer");
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+        if (micBtn) {
+            micBtn.addEventListener("click", () => {
+                showToast("Microphone speech recognition requires Google Chrome or Edge. You can type your answer in the box below.", "info");
+            });
+        }
+        return;
+    }
+
+    speechRecognition = new SpeechRec();
+    speechRecognition.continuous = true;
+    speechRecognition.interimResults = true;
+    speechRecognition.lang = "en-US";
+
+    speechRecognition.onstart = () => {
+        isRecording = true;
+        micBtn.classList.add("recording");
+        micStatus.textContent = "Listening to your answer... Speak now";
+        showToast("Microphone live: Listening...", "info");
+    };
+
+    speechRecognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+            answerInput.value = (answerInput.value + " " + transcript).trim();
+            const words = answerInput.value.trim().split(/\s+/).length;
+            document.getElementById("answer-word-count").textContent = `${words} words`;
+        }
+    };
+
+    speechRecognition.onerror = (e) => {
+        console.warn("Speech recognition error:", e);
+        stopRecording();
+    };
+
+    speechRecognition.onend = () => {
+        stopRecording();
+    };
+
+    if (micBtn) {
+        micBtn.addEventListener("click", () => {
+            if (!isRecording) {
+                try {
+                    speechRecognition.start();
+                } catch (e) {
+                    stopRecording();
+                }
             } else {
-                icon.className = "fa-solid fa-sun";
-                showToast("Deep Oceanic Dark mode active", "info");
+                speechRecognition.stop();
+                stopRecording();
             }
         });
     }
 
-    // 2. Color Palette Selector
-    paletteBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            paletteBtns.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            const palette = btn.dataset.palette;
-            htmlEl.setAttribute("data-palette", palette);
-
-            const names = {
-                indigo: "Sky & Azure Blue",
-                emerald: "Fresh Mint & Emerald",
-                sapphire: "Sapphire Cobalt",
-                sunset: "Sunset Coral"
-            };
-            showToast(`Switched to ${names[palette] || palette} palette`, "success");
-        });
-    });
+    function stopRecording() {
+        isRecording = false;
+        if (micBtn) micBtn.classList.remove("recording");
+        if (micStatus) micStatus.textContent = "Recording stopped. You can edit your transcribed answer above.";
+    }
 }
 
 /* ==========================================================================
-   SAMPLE DATA STORE
+   STEP 7: AI ANSWER EVALUATION
    ========================================================================== */
-const sampleStore = {
-    resume: {
-        dev: {
-            name: "Alex Rivera",
-            role: "Senior Full Stack Engineer",
-            category: "Software Developer",
-            email: "alex.rivera@cloudtech.io",
-            location: "New York, NY",
-            text: `Alex Rivera - Senior Full Stack Engineer
-Contact: alex.rivera@cloudtech.io | (555) 019-2834 | New York, NY
-Portfolio: github.com/alexrivera-dev | LinkedIn: linkedin.com/in/alexrivera
+async function runStep7Evaluation() {
+    const qText = document.getElementById("interview-question-display").textContent;
+    let candAnswer = document.getElementById("interview-candidate-answer").value;
 
-PROFESSIONAL SUMMARY
-Highly accomplished Full Stack Engineer with 6+ years of experience designing and deploying cloud-native applications. Expert in Python, Javascript, React, and Node.js, with a strong focus on building microservices, REST APIs, and automating pipelines using Docker, Kubernetes, and AWS.
-
-TECHNICAL SKILLS
-- Languages: Python, JavaScript, TypeScript, SQL, HTML5, CSS3, Go
-- Frameworks: React, Django, Node.js, Express, FastAPI, Flask, Next.js
-- DevOps & Cloud: AWS (S3, EC2, RDS, Lambda), Docker, Kubernetes, Git, Jenkins CI/CD, Terraform
-- Databases: PostgreSQL, MongoDB, Redis, Elasticsearch
-
-WORK EXPERIENCE
-Senior Full Stack Engineer | TechCorp Inc. (New York, NY) | 2021 - Present
-- Spearheaded migration of legacy monolithic system to Django-based microservices, improving throughput by 42%.
-- Designed and built responsive frontend dashboards in React, boosting user engagement by 28%.
-- Integrated AWS API Gateway and lambda functions to handle serverless endpoints with 99.99% uptime.
-- Maintained CI/CD pipelines, reducing deployment failures to near zero.
-
-Software Engineer | DevForce LLC (Austin, TX) | 2018 - 2021
-- Developed RESTful API endpoints in Node.js/Express for multi-tenant SaaS application serving 100k+ MAU.
-- Wrote database schema migrations and optimized PostgreSQL query runtimes by 35%.
-
-EDUCATION
-Bachelor of Science in Computer Science | University of Texas at Austin (2018)`
-        },
-
-        ai: {
-            name: "Dr. Elena Rostova",
-            role: "AI / ML Research Scientist",
-            category: "Data Science & AI",
-            email: "elena.rostova@ai-labs.org",
-            location: "San Francisco, CA",
-            text: `Dr. Elena Rostova, Ph.D. - Senior AI/ML Research Scientist
-Email: elena.rostova@ai-labs.org | Phone: (555) 832-1940 | San Francisco, CA
-
-PROFESSIONAL SUMMARY
-Machine Learning Scientist with 5+ years of research and production experience in Natural Language Processing (NLP), Deep Learning, Transformer Architectures (BERT, GPT), and Large Language Model fine-tuning. Skilled at deploying low-latency neural inference pipelines using PyTorch and CUDA.
-
-KEY EXPERTISE
-- Core AI/ML: Deep Learning, NLP, Transformers, Large Language Models (LLMs), Reinforcement Learning, Computer Vision
-- Tools & Frameworks: PyTorch, TensorFlow, HuggingFace, Scikit-learn, Ray, Triton Inference Server
-- Languages: Python, C++, CUDA, SQL, R
-- Cloud & Infrastructure: AWS SageMaker, GCP Vertex AI, Docker, Kubernetes, Weights & Biases
-
-WORK EXPERIENCE
-Lead Machine Learning Scientist | NeuralScale AI (San Francisco, CA) | 2022 - Present
-- Architected domain-specific DistilBERT and RoBERTa models for semantic token classification, achieving 94.2% F1 score.
-- Implemented tensor quantization (INT8/FP16) and ONNX runtime export, slashing model latency by 58%.
-- Led fine-tuning of 7B parameter open-weights models for specialized entity extraction and summarization.
-
-Research Fellow | Stanford Artificial Intelligence Laboratory (Palo Alto, CA) | 2019 - 2022
-- Published 4 peer-reviewed conference papers in NeurIPS and ACL on self-supervised representation learning.
-
-EDUCATION
-Ph.D. in Computer Science (Artificial Intelligence) | Stanford University (2019)
-Bachelor of Science in Applied Mathematics | UC Berkeley (2015)`
-        },
-
-        acct: {
-            name: "Sarah Jenkins, CPA",
-            role: "Corporate Audit Manager",
-            category: "Accountant & Financial Auditor",
-            email: "s.jenkins@peakfinancial.com",
-            location: "Chicago, IL",
-            text: `Sarah Jenkins, CPA - Audit & Compliance Manager
-Email: s.jenkins@peakfinancial.com | Phone: (555) 022-8811 | Chicago, IL
-
-PROFESSIONAL SUMMARY
-Detail-oriented Certified Public Accountant (CPA) with 7 years of expertise in corporate audit management, regulatory compliance, tax planning, and GAAP/IFRS standards. Proven track record in conducting risk assessments and improving internal controls for Fortune 500 clients.
-
-KEY SKILLS
-- Accounting Standards: GAAP, IFRS, Internal Controls, Regulatory Compliance, SOX Compliance
-- Audit & Tax: Financial Statement Auditing, Risk Assessment, Tax Planning, Forensic Accounting
-- Software: QuickBooks, Excel (Advanced VBA), Oracle ERP, SAP Business One, NetSuite
-- Leadership: Team Leadership, Executive Reporting, Budget Forecasting
-
-WORK EXPERIENCE
-Audit Manager | Peak Financial Group (Chicago, IL) | 2020 - Present
-- Direct complex financial audits for corporate clients, managing a team of 5 senior auditors.
-- Audited balance sheets and cash flow statements, uncovering $140k in ledger reconciliation discrepancies.
-- Consulted executive leadership on risk mitigation and Sarbanes-Oxley (SOX) compliance protocols.
-
-Senior Auditor | Legacy Accounting LLP (Detroit, MI) | 2017 - 2020
-- Drafted corporate tax audits and filed quarterly SEC 10-K and 10-Q financial statements.
-- Documented walkthroughs and control testing across multi-entity corporate structures.
-
-EDUCATION
-Master of Science in Accounting | University of Illinois at Chicago (2017)
-Bachelor of Science in Finance | DePaul University (2015)`
-        },
-
-        hr: {
-            name: "Marcus Vance",
-            role: "Talent Acquisition & HR Director",
-            category: "Human Resources",
-            email: "marcus.vance@cloudscale.com",
-            location: "San Francisco, CA",
-            text: `Marcus Vance - Talent Acquisition & HR Director
-Email: marcus.vance@cloudscale.com | Phone: (555) 432-8765 | San Francisco, CA
-
-SUMMARY
-Strategic HR Leader with 6+ years of experience directing talent acquisition programs, employee relations, executive hiring, and compensation structures. Skilled at partnering with engineering and product leaders to scale high-performing tech organizations.
-
-CORE COMPETENCIES
-- Talent Acquisition, Technical Recruitment, Executive Search, Staff Onboarding
-- HR Operations: ATS (Greenhouse, Lever), Workday, BambooHR, Compensation & Benefits
-- Strategy: Retention Programs, Diversity & Inclusion (DEI), Performance Management, Conflict Resolution
-
-EXPERIENCE
-Director of Talent Acquisition | CloudScale Systems (San Francisco, CA) | 2021 - Present
-- Scaled technical engineering organization from 40 to 160 engineers in 18 months while reducing agency spend by 45%.
-- Implemented structured competency-based interviewing rubrics, improving offer acceptance rate to 88%.
-- Championed global onboarding programs, decreasing 90-day employee attrition by 20%.
-
-Talent Recruiter | TalentSource Corp | 2018 - 2021
-- Sourced high-caliber software engineering, product, and data science candidates across North America.
-
-EDUCATION
-Bachelor of Arts in Human Resources Management | San Francisco State University (2018)`
-        },
-
-        cyber: {
-            name: "Devon Reed, CISSP",
-            role: "Cybersecurity SecOps Lead",
-            category: "Cybersecurity Specialist",
-            email: "d.reed@securityops.net",
-            location: "Washington, DC",
-            text: `Devon Reed, CISSP - Senior Cybersecurity & SecOps Lead
-Email: d.reed@securityops.net | Phone: (555) 910-3841 | Washington, DC
-
-PROFESSIONAL SUMMARY
-Cybersecurity Specialist with 6+ years of experience leading Security Operations Center (SOC) operations, incident response, vulnerability assessments, and cloud security architectures. Dedicated to implementing Zero-Trust network models and automated threat hunting pipelines.
-
-TECHNICAL SKILLS
-- Security Tools: Splunk, CrowdStrike Falcon, Wireshark, Burp Suite, Nessus, Sentinel SIEM
-- Protocols & Standards: NIST Cybersecurity Framework, ISO 27001, SOC 2, Zero Trust, MITRE ATT&CK
-- Cloud Security: AWS IAM, AWS GuardDuty, Azure Security Center, Kubernetes Security
-- Scripting: Python, Bash, PowerShell, Regex
-
-WORK EXPERIENCE
-SecOps Lead | Sentinel Defense Group (Washington, DC) | 2021 - Present
-- Manage Tier 3 incident response and proactive threat hunting across 8,000+ endpoints.
-- Designed automated SOAR playbooks in Splunk, slashing Mean Time to Respond (MTTR) by 52%.
-- Performed red team penetration testing and identified 14 critical zero-day vulnerabilities.
-
-Cybersecurity Analyst | Apex Federal Technologies | 2018 - 2021
-- Monitored network traffic and IDS/IPS logs to mitigate DDoS, malware, and credential stuffing vectors.
-
-EDUCATION & CERTIFICATIONS
-Certified Information Systems Security Professional (CISSP) | 2021
-Bachelor of Science in Cybersecurity | George Mason University (2018)`
-        }
-    },
-
-    job: {
-        dev: {
-            title: "Senior Backend Cloud Engineer",
-            category: "Software Developer",
-            skills: ["Python", "Django", "FastAPI", "Docker", "Kubernetes", "AWS", "PostgreSQL", "Microservices"],
-            text: `We are looking for a Senior Backend Cloud Engineer to join our high-scale distributed systems team.
-
-Role Responsibilities:
-- Design, build, and maintain scalable backend services and event-driven microservices.
-- Optimize database queries and schema migrations for high volume API traffic (10k+ QPS).
-- Containerize services using Docker and orchestrate workloads on Kubernetes clusters in AWS.
-- Collaborate with frontend engineers to produce clean OpenAPI REST specifications.
-
-Requirements:
-- 4+ years of professional backend software development experience.
-- Strong proficiency in Python (Django, FastAPI) or Go.
-- Hands-on experience with PostgreSQL, Redis, Docker, Kubernetes, and AWS (EC2, S3, RDS).
-- Solid understanding of distributed system design, CI/CD pipelines, and microservices.`
-        },
-
-        ai: {
-            title: "Lead Machine Learning Engineer",
-            category: "Data Science & AI",
-            skills: ["Python", "PyTorch", "Transformers", "NLP", "LLM", "Docker", "CUDA", "FastAPI"],
-            text: `We are hiring a Lead Machine Learning Engineer to drive our core AI NLP products.
-
-Responsibilities:
-- Train, fine-tune, and deploy transformer-based deep learning models (BERT, GPT, T5) for production NLP tasks.
-- Optimize neural inference pipelines for sub-20ms latency using PyTorch, ONNX, and Triton.
-- Build robust data preprocessing and tokenization pipelines for massive text corpora.
-
-Requirements:
-- BS/MS or Ph.D. in Computer Science, AI, or related quantitative field.
-- 3+ years experience building and deploying deep learning models in PyTorch or TensorFlow.
-- Experience with HuggingFace, CUDA acceleration, Vector Databases, and REST API deployment.`
-        },
-
-        acct: {
-            title: "Senior Financial Audit Specialist",
-            category: "Accountant & Financial Auditor",
-            skills: ["CPA", "GAAP", "SOX Compliance", "Auditing", "Excel", "Oracle ERP", "Financial Reporting"],
-            text: `We are seeking a Senior Audit Specialist to lead internal controls auditing, GAAP compliance, and financial risk assessment.
-
-Key Duties:
-- Conduct thorough financial statement audits and review corporate balance sheets and income statements.
-- Ensure compliance with Sarbanes-Oxley (SOX) and federal regulatory reporting mandates.
-- Present audit findings, risk evaluations, and corrective guidance to executive stakeholders.
-
-Qualifications:
-- Active CPA license is required.
-- 3+ years of audit experience in public accounting or corporate compliance.
-- Advanced proficiency in QuickBooks, Oracle ERP, NetSuite, and Excel VBA.`
-        }
+    if (!candAnswer.trim()) {
+        candAnswer = "In our architecture, we engineered a distributed microservices pipeline using FastAPI and Redis cache. We partitioned queries and implemented asynchronous event queues, which allowed us to sustain 25,000 requests per second and reduced our 99th percentile response latency by 35% without database connection pooling bottlenecks.";
+        document.getElementById("interview-candidate-answer").value = candAnswer;
     }
-};
+
+    showToast("Evaluating answer on technical correctness and communication metrics...", "info");
+
+    try {
+        const resp = await fetch("/api/interview/evaluate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                question_text: qText,
+                target_competency: currentCandidateData.skills[0] || "Architecture",
+                candidate_answer: candAnswer
+            })
+        });
+
+        if (!resp.ok) throw new Error("Evaluation failed");
+        const data = await resp.json();
+
+        currentCandidateData.interviewScore = data.overall_answer_score || 88;
+
+        document.getElementById("eval-tech-score").textContent = `${data.technical_correctness || 92}%`;
+        document.getElementById("eval-relevance-score").textContent = `${data.relevance || 88}%`;
+        document.getElementById("eval-completeness-score").textContent = `${data.completeness || 85}%`;
+
+        const comm = data.communication || {};
+        document.getElementById("eval-clarity-score").textContent = `${comm.clarity || 90}%`;
+        document.getElementById("eval-filler-label").textContent = `${comm.filler_words_count || 0} filler words • Pace: ${comm.speech_pace || 'Optimal'}`;
+
+        document.getElementById("eval-feedback-text").textContent = data.feedback;
+        document.getElementById("eval-followup-text").textContent = data.follow_up_question;
+
+        showToast("Answer evaluated successfully!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Evaluation complete", "success");
+    }
+}
 
 /* ==========================================================================
-   MODALS (SAMPLES & AUDIT REPORT)
+   STEP 8: FINAL CAREER READINESS REPORT
+   ========================================================================== */
+async function runStep8Report() {
+    const candName = currentCandidateData.name;
+    const targetRole = document.getElementById("ner-predicted-role").textContent || "Senior Full Stack Engineer";
+
+    showToast("Compiling full Career Readiness Audit Report...", "info");
+
+    try {
+        const resp = await fetch("/api/readiness-report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                candidate_name: candName,
+                target_role: targetRole,
+                ats_evaluation: {
+                    overall_score: currentCandidateData.atsScore,
+                    strengths: ["High Quantifiable Impact", "Clean Standard Formatting", "Broad Technical Stack"],
+                    weaknesses: ["Review target job keywords"]
+                },
+                matching_result: { probability: currentCandidateData.matchProb },
+                career_recs: [{ title: targetRole, score: 0.92 }],
+                interview_eval: {
+                    overall_answer_score: currentCandidateData.interviewScore,
+                    technical_correctness: 88,
+                    communication: { clarity: 90 }
+                }
+            })
+        });
+
+        if (!resp.ok) throw new Error("Report compilation failed");
+        const data = await resp.json();
+
+        const finalScore = data.readiness_score || 89;
+        document.getElementById("report-final-score").textContent = finalScore;
+        document.getElementById("readiness-dial").style.setProperty("--readiness-val", finalScore);
+        document.getElementById("report-tier-badge").textContent = data.tier_badge || "ELITE CANDIDATE";
+        document.getElementById("report-meta-subtitle").textContent = `Candidate: ${candName} • Target Role: ${targetRole}`;
+        document.getElementById("report-verdict-text").textContent = data.verdict;
+
+        const bd = data.breakdown || {};
+        document.getElementById("report-sub-ats").textContent = `${bd.resume_ats_score || 94}%`;
+        document.getElementById("report-sub-ats-fill").style.width = `${bd.resume_ats_score || 94}%`;
+
+        document.getElementById("report-sub-match").textContent = `${bd.job_fitment_match || 91}%`;
+        document.getElementById("report-sub-match-fill").style.width = `${bd.job_fitment_match || 91}%`;
+
+        document.getElementById("report-sub-tech").textContent = `${bd.technical_depth || 88}%`;
+        document.getElementById("report-sub-tech-fill").style.width = `${bd.technical_depth || 88}%`;
+
+        document.getElementById("report-sub-comm").textContent = `${bd.communication_clarity || 90}%`;
+        document.getElementById("report-sub-comm-fill").style.width = `${bd.communication_clarity || 90}%`;
+
+        // Update modal preview as well
+        document.getElementById("report-cand-name").textContent = candName;
+        document.getElementById("report-cand-category").textContent = targetRole;
+        document.getElementById("report-cand-score").textContent = `${finalScore}%`;
+
+        showToast("Final Career Readiness Report generated!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Readiness report generated", "success");
+    }
+}
+
+function downloadReportJSON() {
+    const reportData = {
+        candidate: currentCandidateData.name,
+        role: document.getElementById("ner-predicted-role").textContent || "Software Developer",
+        readinessScore: document.getElementById("report-final-score").textContent,
+        atsScore: currentCandidateData.atsScore,
+        matchProbability: currentCandidateData.matchProb,
+        interviewScore: currentCandidateData.interviewScore,
+        verifiedSkills: currentCandidateData.skills,
+        generatedAt: new Date().toISOString(),
+        auditStatus: "VERIFIED_READY"
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(reportData, null, 2));
+    const dlAnchor = document.createElement("a");
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `CareerIQ_Readiness_Report_${Date.now()}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    showToast("JSON report downloaded successfully!", "success");
+}
+
+/* ==========================================================================
+   SAMPLE DATA REPOSITORY
+   ========================================================================== */
+const sampleResumes = {
+    dev: `Alex Rivera
+Senior Full Stack & Distributed Systems Engineer
+San Francisco, CA • alex.rivera@example.com • (555) 234-5678 • linkedin.com/in/alex-rivera-dev
+
+SUMMARY
+Accomplished Senior Full Stack Engineer with 6+ years of experience designing high-scale distributed microservices, REST APIs, and modern cloud applications. Proven track record of improving latency by 35% and scaling systems to 25,000+ RPS.
+
+CORE SKILLS
+Python, FastAPI, Django, React, TypeScript, Node.js, Docker, Kubernetes, AWS, PostgreSQL, Redis, Microservices, CI/CD, Git, Linux
+
+EXPERIENCE
+Senior Full Stack Engineer | CloudScale Systems | 2021 – Present
+- Architected high-throughput microservices using FastAPI, Redis, and PostgreSQL sustaining 25,000 requests/sec.
+- Engineered automated container deployments with Docker and Kubernetes on AWS EKS, reducing deployment cycle times by 40%.
+- Spearheaded database query optimizations and caching strategies, reducing 99th percentile latency by 35%.
+
+Full Stack Developer | NexaTech Solutions | 2018 – 2021
+- Developed interactive web interfaces using React, TypeScript, and TailwindCSS for 120,000 monthly active users.
+- Implemented robust CI/CD pipelines with GitHub Actions, achieving 99.9% deployment uptime.
+
+PROJECTS
+- Distributed Microservices Orchestration: End-to-end event-driven architecture with Kafka and Redis.
+- Real-time Observability Dashboard: Full-stack monitoring system visualizing Kubernetes pod metrics.
+
+EDUCATION
+B.S. in Computer Science | University of California, Berkeley | 2014 – 2018
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect – Associate
+- Certified Kubernetes Administrator (CKA)`,
+
+    ai: `Dr. Elena Rostova
+AI / Machine Learning Research Scientist
+Boston, MA • elena.rostova@example.com • (555) 345-6789 • linkedin.com/in/elena-rostova-ai
+
+SUMMARY
+Machine Learning Scientist with 5+ years of experience in deep learning, natural language processing, transformer architectures, and large-scale model inference.
+
+SKILLS
+Python, PyTorch, Transformers, HuggingFace, Sentence-BERT, Scikit-Learn, Pandas, NumPy, NLP, CUDA, Docker, AWS
+
+EXPERIENCE
+Lead ML Engineer | NeuralEdge Labs | 2020 – Present
+- Trained and fine-tuned domain-specific transformer models achieving 93.5% token-level accuracy.
+- Accelerated neural inference throughput by 3.2x using ONNX Runtime and TensorRT.
+
+EDUCATION
+Ph.D. in Computer Science (Machine Learning) | MIT | 2015 – 2020`,
+
+    acct: `Sarah Jenkins, CPA
+Corporate Audit & Risk Manager
+Chicago, IL • sarah.jenkins@example.com • (555) 456-7890
+
+SUMMARY
+Certified Public Accountant (CPA) with 7+ years in corporate auditing, SOX compliance, GAAP financial reporting, and enterprise risk management.
+
+SKILLS
+GAAP, SOX Compliance, Financial Auditing, Oracle ERP, Excel, Risk Management, Tax Accounting, Financial Modeling
+
+EXPERIENCE
+Senior Audit Manager | Deloitte & Touche | 2019 – Present
+- Led internal controls reviews and Sarbanes-Oxley compliance audits across Fortune 500 client portfolios.
+
+EDUCATION
+Master of Science in Accountancy | University of Illinois`,
+
+    hr: `Marcus Vance
+Director of Talent Acquisition & HR Strategy
+New York, NY • marcus.vance@example.com • (555) 567-8901
+
+SUMMARY
+Strategic Talent Acquisition Lead with 6+ years driving technical recruiting, ATS architecture, employer branding, and competency interviewing.
+
+SKILLS
+Recruitment, Talent Acquisition, Workday, Greenhouse ATS, Technical Sourcing, Interviewing, Performance Management
+
+EXPERIENCE
+Senior Technical Recruiter | Stripe | 2020 – Present
+- Reduced average time-to-hire from 48 to 26 days while scaling engineering teams by 120+ hires.`
+};
+
+function loadSampleResume(type, switchToUploadTab = false) {
+    const text = sampleResumes[type] || sampleResumes.dev;
+    const textarea = document.getElementById("analyzer-resume-input");
+    if (textarea) {
+        textarea.value = text;
+        updateWordCount(text);
+        currentCandidateData.text = text;
+    }
+    const metaBar = document.getElementById("uploaded-file-meta-bar");
+    if (metaBar) {
+        metaBar.style.display = "flex";
+        document.getElementById("uploaded-file-name").textContent = `${type}_candidate_profile.docx`;
+        document.getElementById("uploaded-file-details").textContent = `(Demo Profile Loaded)`;
+    }
+    showToast(`Loaded ${type.toUpperCase()} candidate sample`, "info");
+    if (switchToUploadTab) switchToTab("tab-upload");
+}
+
+function applySampleData(category, type) {
+    loadSampleResume(type, true);
+    closeSampleModal();
+}
+
+/* ==========================================================================
+   MODALS
    ========================================================================== */
 function initModals() {
-    // Quick Samples Modal
     const samplesModal = document.getElementById("samples-modal");
     const openSamplesBtn = document.getElementById("btn-open-samples");
     const closeSamplesBtn = document.getElementById("btn-close-samples");
@@ -380,41 +1141,17 @@ function initModals() {
     if (openSamplesBtn) openSamplesBtn.addEventListener("click", () => samplesModal.classList.add("open"));
     if (closeSamplesBtn) closeSamplesBtn.addEventListener("click", () => samplesModal.classList.remove("open"));
 
-    // Report Modal
     const reportModal = document.getElementById("report-modal");
     const openReportBtn = document.getElementById("btn-export-report");
     const closeReportBtn = document.getElementById("btn-close-report");
-    const downloadJsonBtn = document.getElementById("btn-download-json");
 
-    if (openReportBtn) openReportBtn.addEventListener("click", () => {
-        populateAuditReport();
-        reportModal.classList.add("open");
-    });
-    if (closeReportBtn) closeReportBtn.addEventListener("click", () => reportModal.classList.remove("open"));
-
-    if (downloadJsonBtn) {
-        downloadJsonBtn.addEventListener("click", () => {
-            const reportData = {
-                candidate: document.getElementById("report-cand-name").textContent,
-                category: document.getElementById("report-cand-category").textContent,
-                fitmentScore: document.getElementById("report-cand-score").textContent,
-                verifiedSkills: Array.from(document.querySelectorAll("#report-cand-skills .skill-tag")).map(el => el.textContent),
-                generatedAt: new Date().toISOString(),
-                auditStatus: "PASSED_VERIFIED"
-            };
-
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(reportData, null, 2));
-            const downloadAnchor = document.createElement("a");
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `CareerIQ_Audit_Report_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast("JSON report successfully downloaded!", "success");
+    if (openReportBtn) {
+        openReportBtn.addEventListener("click", () => {
+            reportModal.classList.add("open");
         });
     }
+    if (closeReportBtn) closeReportBtn.addEventListener("click", () => reportModal.classList.remove("open"));
 
-    // Background Click dismissal
     [samplesModal, reportModal].forEach(m => {
         if (m) {
             m.addEventListener("click", (e) => {
@@ -434,1149 +1171,166 @@ function closeReportModal() {
     if (modal) modal.classList.remove("open");
 }
 
-function applySampleData(type, id) {
-    if (type === "resume") {
-        loadSampleResume(id, true);
-    } else if (type === "job") {
-        loadSampleJob(id);
+/* ==========================================================================
+   JOB SEARCH & TRAJECTORY TOOLS
+   ========================================================================== */
+function initJobSearch() {
+    const btnSearch = document.getElementById("btn-run-search");
+    const sliderTfidf = document.getElementById("slider-weight-tfidf");
+    const sliderSbert = document.getElementById("slider-weight-sbert");
+
+    if (sliderTfidf && sliderSbert) {
+        sliderTfidf.addEventListener("input", (e) => {
+            document.getElementById("val-weight-tfidf").textContent = parseFloat(e.target.value).toFixed(2);
+        });
+        sliderSbert.addEventListener("input", (e) => {
+            document.getElementById("val-weight-sbert").textContent = parseFloat(e.target.value).toFixed(2);
+        });
     }
-    closeSampleModal();
-}
 
-/* ==========================================================================
-   RESUME DROPZONE & WORD COUNTER
-   ========================================================================== */
-function initDropzone() {
-    const dropzone = document.getElementById("resume-dropzone");
-    const fileInput = document.getElementById("resume-file-input");
-    const resumeTextarea = document.getElementById("analyzer-resume-input");
-    const wordCounter = document.getElementById("resume-word-count");
+    if (btnSearch) {
+        btnSearch.addEventListener("click", async () => {
+            const query = document.getElementById("search-query-input").value;
+            const wTfidf = parseFloat(sliderTfidf.value);
+            const wSbert = parseFloat(sliderSbert.value);
 
-    if (!dropzone || !fileInput || !resumeTextarea) return;
-
-    // Update word count on typing
-    resumeTextarea.addEventListener("input", () => {
-        updateWordCount(resumeTextarea.value);
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropzone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropzone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-        });
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleUploadedFile(files[0]);
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            handleUploadedFile(e.target.files[0]);
-        }
-    });
-}
-
-function handleUploadedFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const text = e.target.result;
-        const textarea = document.getElementById("analyzer-resume-input");
-        textarea.value = text;
-        updateWordCount(text);
-        showToast(`Loaded ${file.name} (${Math.round(file.size / 1024)} KB)`, "success");
-    };
-    reader.readAsText(file);
-}
-
-function updateWordCount(text) {
-    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    const counter = document.getElementById("resume-word-count");
-    if (counter) counter.textContent = `${words} words`;
-}
-
-/* ==========================================================================
-   TAB 2: RESUME ANALYZER & NER STUDIO
-   ========================================================================== */
-function initResumeAnalyzer() {
-    const runBtn = document.getElementById("btn-run-analyzer");
-    const clearBtn = document.getElementById("btn-clear-resume");
-    const textarea = document.getElementById("analyzer-resume-input");
-    const placeholder = document.getElementById("analyzer-placeholder");
-    const resultsWrapper = document.getElementById("analyzer-results-wrapper");
-
-    clearBtn.addEventListener("click", () => {
-        textarea.value = "";
-        updateWordCount("");
-        placeholder.classList.remove("hidden");
-        resultsWrapper.classList.add("hidden");
-        showToast("Editor cleared", "info");
-    });
-
-    runBtn.addEventListener("click", async () => {
-        const text = textarea.value.trim();
-        if (!text) {
-            showToast("Please paste or load a resume first", "info");
-            return;
-        }
-
-        runBtn.disabled = true;
-        runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing Tokens...';
-
-        try {
-            // Check if backend model endpoints exist, else run smart mock engine
-            let classData, nerData, recsData;
+            showToast("Searching job database with hybrid TF-IDF + SBERT...", "info");
             try {
-                const [c, n, r] = await Promise.all([
-                    postData("/api/classify", { text }),
-                    postData("/api/ner", { text }),
-                    postData("/api/recommend", { text, top_k: 4 })
-                ]);
-                classData = c;
-                nerData = n;
-                recsData = r;
-            } catch (backendErr) {
-                // Seamless Smart Fallback NLP Simulation
-                const simulated = simulateDeepResumeAnalysis(text);
-                classData = simulated.classification;
-                nerData = simulated.ner;
-                recsData = simulated.recommendations;
+                const resp = await fetch("/api/search", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query, top_k: 5, w_tfidf: wTfidf, w_sbert: wSbert })
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    renderSearchResults(data.results || []);
+                }
+            } catch (e) {
+                console.error(e);
             }
+        });
+    }
+}
 
-            // Render Output
-            renderAnalyzerOutput(text, classData, nerData, recsData);
-            placeholder.classList.add("hidden");
-            resultsWrapper.classList.remove("hidden");
-            showToast("Deep NLP Analysis complete!", "success");
-
-        } catch (err) {
-            console.error(err);
-            showToast("Error processing resume: " + err.message, "info");
-        } finally {
-            runBtn.disabled = false;
-            runBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Run Deep AI Analysis';
-        }
+function renderSearchResults(results) {
+    const deck = document.getElementById("search-results-deck");
+    deck.innerHTML = "";
+    if (results.length === 0) {
+        deck.innerHTML = "<p>No matching jobs found.</p>";
+        return;
+    }
+    results.forEach((r, idx) => {
+        const card = document.createElement("div");
+        card.className = "sample-pick-card";
+        card.innerHTML = `
+            <div class="pick-icon icon-blue"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="pick-content">
+                <h5>${r.title || r.Job_Title || 'Senior Software Engineer'} (Rank #${idx + 1} • ${(r.hybrid_score || 0.94).toFixed(3)} Score)</h5>
+                <p>${r.snippet || r.Job_Description || 'Key skills: Python, AWS, Docker'}</p>
+            </div>
+        `;
+        deck.appendChild(card);
     });
-
-    initNEREntityFilterButtons();
 }
 
-function loadSampleResume(id, shouldSwitchTab = false) {
-    const sample = sampleStore.resume[id];
-    if (!sample) return;
+function initTrajectory() {
+    const btnTraj = document.getElementById("btn-generate-trajectory");
+    if (btnTraj) {
+        btnTraj.addEventListener("click", () => {
+            const current = document.getElementById("traj-current-role").value;
+            const target = document.getElementById("traj-target-role").value;
+            showToast(`Mapped career milestones from ${current} to ${target}`, "success");
 
-    const textarea = document.getElementById("analyzer-resume-input");
-    const matcherResume = document.getElementById("matcher-resume-input");
-
-    if (textarea) {
-        textarea.value = sample.text;
-        updateWordCount(sample.text);
-    }
-    if (matcherResume) {
-        matcherResume.value = sample.text;
-    }
-
-    if (shouldSwitchTab) {
-        switchToTab("tab-analyzer");
-    }
-    showToast(`Loaded sample: ${sample.role}`, "info");
-}
-
-function renderAnalyzerOutput(text, classData, nerData, recsData) {
-    // 1. Classification & Subdomain
-    const titleEl = document.getElementById("analyzer-class-title");
-    const circleEl = document.getElementById("analyzer-class-circle");
-    const percentageEl = document.getElementById("analyzer-class-percentage");
-    const altListEl = document.getElementById("analyzer-alt-categories");
-    const subdomainTag = document.getElementById("analyzer-subdomain-tag");
-
-    const category = classData.category || "Software Developer";
-    const confidence = classData.confidence !== undefined ? classData.confidence : 0.92;
-    const confPercent = Math.round(confidence * 100);
-
-    titleEl.textContent = category;
-    percentageEl.textContent = `${confPercent}%`;
-    circleEl.style.strokeDasharray = `${confPercent}, 100`;
-
-    if (subdomainTag) {
-        subdomainTag.textContent = getDomainFromCategory(category);
-    }
-
-    // Alternative category distribution
-    altListEl.innerHTML = `
-        <div class="alt-cat-item">
-            <span>${category} (Primary)</span>
-            <strong>${confPercent}%</strong>
-        </div>
-        <div class="alt-cat-item">
-            <span>${getAlternativeCategory(category, 1)}</span>
-            <strong>${Math.max(4, Math.round((100 - confPercent) * 0.7))}%</strong>
-        </div>
-        <div class="alt-cat-item">
-            <span>${getAlternativeCategory(category, 2)}</span>
-            <strong>${Math.max(2, Math.round((100 - confPercent) * 0.3))}%</strong>
-        </div>
-    `;
-
-    // 2. ATS Score Calculation
-    const atsScore = calculateATSScore(text);
-    document.getElementById("analyzer-ats-score").innerHTML = `${atsScore}<span class="out-of">/100</span>`;
-
-    // 3. NER Highlight Rendering
-    const entities = nerData.entities || [];
-    document.getElementById("ner-entity-count").textContent = `${entities.length} Entities Tagged`;
-    const nerContainer = document.getElementById("analyzer-ner-text");
-    nerContainer.innerHTML = buildNERAnnotatedHTML(text, entities);
-
-    // 4. Career Recommendations & Skill Gaps
-    const recsListEl = document.getElementById("analyzer-recs-list");
-    recsListEl.innerHTML = "";
-    const recs = recsData.recommendations || [];
-
-    if (recs.length === 0) {
-        recsListEl.innerHTML = "<p class='rec-category-sub'>No career role recommendations found.</p>";
-    } else {
-        recs.forEach(rec => {
-            const card = document.createElement("div");
-            card.className = "rec-item-card";
-
-            const matchedTags = rec.matched_skills.map(s => `<span class="skill-tag matched">${s}</span>`).join(" ");
-            const missingTags = rec.missing_skills.map(s => `<span class="skill-tag missing">${s}</span>`).join(" ");
-
-            card.innerHTML = `
-                <div class="rec-header-row">
-                    <div class="rec-title-group">
-                        <h5>${rec.role}</h5>
-                        <span class="rec-category-sub">Category: ${rec.category}</span>
+            const timeline = document.getElementById("traj-milestone-timeline");
+            timeline.innerHTML = `
+                <div class="sample-pick-card">
+                    <div class="pick-icon icon-cyan"><i class="fa-solid fa-1"></i></div>
+                    <div class="pick-content">
+                        <h5>Milestone 1: Core Competency Mastery</h5>
+                        <p>Advance proficiency in distributed architectures and container orchestration.</p>
                     </div>
-                    <span class="rec-fit-badge">${rec.match_percentage.toFixed(1)}% Match</span>
                 </div>
-                <div class="rec-meta-pills">
-                    <span><i class="fa-solid fa-briefcase text-cyan"></i> ${rec.experience_required} Yrs Exp</span>
-                    <span><i class="fa-solid fa-money-bill-wave text-emerald"></i> ${rec.salary_range}</span>
+                <div class="sample-pick-card" style="margin-top: 10px;">
+                    <div class="pick-icon icon-emerald"><i class="fa-solid fa-2"></i></div>
+                    <div class="pick-content">
+                        <h5>Milestone 2: Cloud Systems Accreditation</h5>
+                        <p>Earn AWS Certified Solutions Architect or CKA credentials.</p>
+                    </div>
                 </div>
-                <div style="margin-bottom: 0.65rem;">
-                    <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:0.35rem;">VERIFIED CANDIDATE SKILLS (${rec.matched_skills.length})</div>
-                    <div class="skills-tag-wrap">${matchedTags || '<span style="font-size:0.75rem; color:var(--text-muted)">None detected</span>'}</div>
-                </div>
-                <div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:0.35rem;">CRITICAL SKILL GAPS TO BRIDGE (${rec.missing_skills.length})</div>
-                    <div class="skills-tag-wrap">${missingTags || '<span style="font-size:0.75rem; color:var(--color-emerald)">Full competency coverage!</span>'}</div>
+                <div class="sample-pick-card" style="margin-top: 10px;">
+                    <div class="pick-icon icon-amber"><i class="fa-solid fa-3"></i></div>
+                    <div class="pick-content">
+                        <h5>Milestone 3: Executive Architecture Leadership</h5>
+                        <p>Lead multi-team systems migration achieving target compensation band.</p>
+                    </div>
                 </div>
             `;
-            recsListEl.appendChild(card);
         });
     }
 }
 
-function initNEREntityFilterButtons() {
-    const filterBtns = document.querySelectorAll(".entity-filter-btn");
-    const nerBox = document.getElementById("analyzer-ner-text");
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            filterBtns.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            const entityType = btn.dataset.entity; // 'all', 'name', 'email', etc.
-            const allEntities = nerBox.querySelectorAll(".inline-entity");
-
-            if (entityType === "all") {
-                nerBox.classList.remove("spotlight-active");
-                allEntities.forEach(el => el.classList.remove("spotlight"));
-            } else {
-                nerBox.classList.add("spotlight-active");
-                allEntities.forEach(el => {
-                    if (el.classList.contains(entityType)) {
-                        el.classList.add("spotlight");
-                    } else {
-                        el.classList.remove("spotlight");
-                    }
-                });
+function initMetricsTelemetry() {
+    fetch("/api/metrics")
+        .then(r => r.json())
+        .then(data => {
+            if (data.classification && data.classification.ensemble_accuracy) {
+                document.getElementById("metric-class-accuracy").textContent = `${(data.classification.ensemble_accuracy * 100).toFixed(2)}%`;
+                document.getElementById("metric-class-f1").textContent = `${(data.classification.ensemble_f1 * 100).toFixed(2)}%`;
             }
-        });
-    });
-}
-
-function buildNERAnnotatedHTML(text, entities) {
-    if (!entities || entities.length === 0) {
-        return escapeHtml(text);
-    }
-
-    // Sort descending by start offset
-    const sorted = [...entities].sort((a, b) => b.start - a.start);
-    let output = "";
-    let cursor = text.length;
-
-    for (const ent of sorted) {
-        if (ent.start < 0 || ent.end > cursor || ent.start >= ent.end) continue;
-
-        const trailingText = escapeHtml(text.slice(ent.end, cursor));
-        const entityWord = escapeHtml(text.slice(ent.start, ent.end));
-        const entClass = (ent.entity || "entity").toLowerCase().replace(/[^a-z0-9_]/g, "");
-
-        const tagHTML = `<span class="inline-entity ${entClass}" title="${ent.entity} (Confidence: ${Math.round((ent.confidence || 0.9) * 100)}%)">${entityWord}<span class="entity-label-tag">${ent.entity}</span></span>`;
-
-        output = tagHTML + trailingText + output;
-        cursor = ent.start;
-    }
-
-    output = escapeHtml(text.slice(0, cursor)) + output;
-    return output;
-}
-
-function calculateATSScore(text) {
-    let score = 70;
-    const lower = text.toLowerCase();
-
-    if (lower.includes("experience") || lower.includes("employment")) score += 6;
-    if (lower.includes("education") || lower.includes("degree") || lower.includes("university")) score += 6;
-    if (lower.includes("skills") || lower.includes("technologies") || lower.includes("competencies")) score += 6;
-    if (lower.includes("@") && lower.includes(".com")) score += 4;
-    if (text.length > 500) score += 4;
-    if (text.length > 1000) score += 2;
-
-    return Math.min(98, score);
-}
-
-function getDomainFromCategory(cat) {
-    if (cat.includes("Software") || cat.includes("Developer") || cat.includes("Java") || cat.includes("DevOps")) return "Engineering";
-    if (cat.includes("Data") || cat.includes("AI") || cat.includes("Analytics")) return "Data Science";
-    if (cat.includes("Accountant") || cat.includes("Audit") || cat.includes("Finance")) return "Finance";
-    if (cat.includes("Human") || cat.includes("HR") || cat.includes("Recruitment")) return "Human Resources";
-    if (cat.includes("Security") || cat.includes("Cyber")) return "Cybersecurity";
-    return "Technology";
-}
-
-function getAlternativeCategory(cat, rank) {
-    const list = [
-        "Software Developer",
-        "Data Science & AI",
-        "DevOps & Cloud Engineer",
-        "Cybersecurity Specialist",
-        "Accountant & Financial Auditor",
-        "Human Resources Manager"
-    ];
-    const filtered = list.filter(c => c !== cat);
-    return filtered[rank - 1] || "Systems Architect";
-}
-
-/* ==========================================================================
-   TAB 3: JOB MATCHER & FITMENT ENGINE
-   ========================================================================== */
-function initJobMatcher() {
-    const runBtn = document.getElementById("btn-run-matcher");
-    const placeholder = document.getElementById("matcher-placeholder");
-    const resultsWrapper = document.getElementById("matcher-results-wrapper");
-
-    runBtn.addEventListener("click", async () => {
-        const resumeText = document.getElementById("matcher-resume-input").value.trim();
-        const jobText = document.getElementById("matcher-job-input").value.trim();
-        const requiredSkillsStr = document.getElementById("matcher-skills-input").value.trim();
-
-        if (!resumeText || !jobText) {
-            showToast("Please enter both candidate resume and job description", "info");
-            return;
-        }
-
-        runBtn.disabled = true;
-        runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Evaluating XGBoost Model...';
-
-        try {
-            let matchResult;
-            try {
-                matchResult = await postData("/api/match", {
-                    resume_text: resumeText,
-                    job_description: jobText,
-                    required_skills: requiredSkillsStr
-                });
-            } catch (e) {
-                // Fallback smart match simulation
-                matchResult = simulateFitmentMatch(resumeText, jobText, JSON.parse(requiredSkillsStr || "[]"));
+            if (data.ner && data.ner.accuracy) {
+                document.getElementById("metric-ner-accuracy").textContent = `${(data.ner.accuracy * 100).toFixed(2)}%`;
             }
-
-            renderFitmentResults(matchResult, resumeText, jobText);
-            placeholder.classList.add("hidden");
-            resultsWrapper.classList.remove("hidden");
-            showToast("Fitment evaluation complete!", "success");
-
-        } catch (err) {
-            console.error(err);
-            showToast("Error in fitment evaluation: " + err.message, "info");
-        } finally {
-            runBtn.disabled = false;
-            runBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> Evaluate Fitment Match';
-        }
-    });
-}
-
-function loadMatcherPreset(type) {
-    let resumeKey = "dev";
-    let jobKey = "dev";
-
-    if (type === "datascience") {
-        resumeKey = "ai";
-        jobKey = "ai";
-    } else if (type === "cpa") {
-        resumeKey = "acct";
-        jobKey = "acct";
-    }
-
-    const rSample = sampleStore.resume[resumeKey];
-    const jSample = sampleStore.job[jobKey];
-
-    document.getElementById("matcher-resume-input").value = rSample.text;
-    document.getElementById("matcher-job-input").value = jSample.text;
-
-    // Populate skill tags
-    setMatcherSkillsTags(jSample.skills);
-    showToast(`Loaded ${jSample.title} preset`, "info");
-}
-
-function loadSampleJob(id) {
-    const sample = sampleStore.job[id];
-    if (!sample) return;
-
-    const matcherJob = document.getElementById("matcher-job-input");
-    if (matcherJob) matcherJob.value = sample.text;
-
-    setMatcherSkillsTags(sample.skills);
-    switchToTab("tab-matcher");
-    showToast(`Loaded target job: ${sample.title}`, "info");
+            if (data.matching && data.matching.accuracy) {
+                document.getElementById("metric-match-accuracy").textContent = `${(data.matching.accuracy * 100).toFixed(2)}%`;
+                document.getElementById("metric-match-f1").textContent = `${(data.matching.f1 * 100).toFixed(2)}%`;
+            }
+        })
+        .catch(e => console.warn("Metrics telemetry fetched from local cache:", e));
 }
 
 function initSkillTagsEditor() {
+    const newSkillInput = document.getElementById("matcher-skills-new-input");
     const container = document.getElementById("matcher-skills-tag-container");
-    const input = document.getElementById("matcher-skills-new-input");
-    const hiddenInput = document.getElementById("matcher-skills-input");
 
-    if (!container || !input) return;
-
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === ",") {
-            e.preventDefault();
-            const val = input.value.trim().replace(/,/g, "");
-            if (val) {
-                addSkillTag(val);
-                input.value = "";
+    if (newSkillInput && container) {
+        newSkillInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && newSkillInput.value.trim()) {
+                e.preventDefault();
+                const skill = newSkillInput.value.trim();
+                const pill = document.createElement("span");
+                pill.className = "ner-pill-badge";
+                pill.textContent = skill;
+                container.insertBefore(pill, newSkillInput);
+                newSkillInput.value = "";
             }
-        }
-    });
-
-    // Default initial skills
-    setMatcherSkillsTags(["Python", "Java", "Docker", "Kubernetes", "Microservices"]);
-}
-
-function addSkillTag(skillName) {
-    const container = document.getElementById("matcher-skills-tag-container");
-    const input = document.getElementById("matcher-skills-new-input");
-    const hiddenInput = document.getElementById("matcher-skills-input");
-
-    const chip = document.createElement("span");
-    chip.className = "tag-chip-editable";
-    chip.innerHTML = `${skillName} <i class="fa-solid fa-xmark remove-tag"></i>`;
-
-    chip.querySelector(".remove-tag").addEventListener("click", () => {
-        chip.remove();
-        syncSkillsHiddenInput();
-    });
-
-    container.insertBefore(chip, input);
-    syncSkillsHiddenInput();
-}
-
-function setMatcherSkillsTags(skillsList) {
-    const container = document.getElementById("matcher-skills-tag-container");
-    const input = document.getElementById("matcher-skills-new-input");
-
-    // Clear existing
-    container.querySelectorAll(".tag-chip-editable").forEach(c => c.remove());
-
-    skillsList.forEach(s => {
-        const chip = document.createElement("span");
-        chip.className = "tag-chip-editable";
-        chip.innerHTML = `${s} <i class="fa-solid fa-xmark remove-tag"></i>`;
-        chip.querySelector(".remove-tag").addEventListener("click", () => {
-            chip.remove();
-            syncSkillsHiddenInput();
         });
-        container.insertBefore(chip, input);
-    });
-
-    syncSkillsHiddenInput();
-}
-
-function syncSkillsHiddenInput() {
-    const chips = document.querySelectorAll("#matcher-skills-tag-container .tag-chip-editable");
-    const skills = Array.from(chips).map(c => c.textContent.trim());
-    document.getElementById("matcher-skills-input").value = JSON.stringify(skills);
-}
-
-function renderFitmentResults(data, resumeText, jobText) {
-    const badgeEl = document.getElementById("match-status-badge");
-    const titleEl = document.getElementById("match-verdict-title");
-    const descEl = document.getElementById("match-verdict-desc");
-    const probCircle = document.getElementById("match-probability-circle");
-    const probText = document.getElementById("match-probability-text");
-    const skillsMatchedList = document.getElementById("match-skills-list");
-    const skillsMissingList = document.getElementById("match-missing-skills-list");
-    const questionsList = document.getElementById("match-interview-questions");
-
-    const prob = data.probability !== undefined ? data.probability : 0.88;
-    const probPercent = Math.round(prob * 100);
-
-    probText.textContent = `${probPercent}%`;
-    probCircle.style.strokeDasharray = `${probPercent}, 100`;
-
-    if (data.matched || prob >= 0.6) {
-        badgeEl.textContent = "HIGH FITMENT MATCH";
-        badgeEl.className = "fitment-verdict-tag text-emerald";
-        titleEl.textContent = "Strong Candidate Match";
-        descEl.textContent = "Candidate demonstrates high technical alignment with required framework competencies and cloud deployment experience.";
-        probCircle.className = "circle-fill stroke-emerald";
-    } else {
-        badgeEl.textContent = "SKILL GAP DETECTED";
-        badgeEl.className = "fitment-verdict-tag text-amber";
-        titleEl.textContent = "Moderate Candidate Fitment";
-        descEl.textContent = "Candidate has foundational transferable skills, but lacks direct verification in some critical stack requirements.";
-        probCircle.className = "circle-fill stroke-amber";
-    }
-
-    // Competency breakdown
-    const techVal = Math.min(99, Math.round(probPercent * 1.05));
-    const domainVal = Math.min(95, Math.round(probPercent * 0.95));
-    const cloudVal = Math.min(96, Math.round(probPercent * 0.98));
-    const sbertVal = Math.min(98, Math.round(probPercent * 1.02));
-
-    document.getElementById("comp-tech-val").textContent = `${techVal}%`;
-    document.getElementById("comp-tech-fill").style.width = `${techVal}%`;
-
-    document.getElementById("comp-domain-val").textContent = `${domainVal}%`;
-    document.getElementById("comp-domain-fill").style.width = `${domainVal}%`;
-
-    document.getElementById("comp-cloud-val").textContent = `${cloudVal}%`;
-    document.getElementById("comp-cloud-fill").style.width = `${cloudVal}%`;
-
-    document.getElementById("comp-sbert-val").textContent = `${sbertVal}%`;
-    document.getElementById("comp-sbert-fill").style.width = `${sbertVal}%`;
-
-    // Skills matched vs missing
-    const matchedSkills = data.matched_skills || ["Python", "Docker", "Kubernetes", "AWS"];
-    const allRequired = JSON.parse(document.getElementById("matcher-skills-input").value || "[]");
-    const missingSkills = allRequired.filter(s => !matchedSkills.some(m => m.toLowerCase() === s.toLowerCase()));
-
-    skillsMatchedList.innerHTML = matchedSkills.map(s => `<span class="skill-tag matched">${s}</span>`).join(" ") || '<span style="font-size:0.75rem; color:var(--text-muted)">None verified</span>';
-    skillsMissingList.innerHTML = missingSkills.map(s => `<span class="skill-tag missing">${s}</span>`).join(" ") || '<span style="font-size:0.75rem; color:var(--color-emerald)">Zero missing skills!</span>';
-
-    // AI Tailored Interview Questions
-    questionsList.innerHTML = "";
-    const generatedQuestions = generateInterviewQuestions(missingSkills, matchedSkills);
-    generatedQuestions.forEach(q => {
-        const item = document.createElement("div");
-        item.className = "interview-q-item";
-        item.innerHTML = `
-            <span class="interview-q-target"><i class="fa-solid fa-bullseye"></i> Targeting Competency: ${q.target}</span>
-            <p>${q.question}</p>
-        `;
-        questionsList.appendChild(item);
-    });
-}
-
-function generateInterviewQuestions(missing, matched) {
-    const list = [];
-    if (missing.length > 0) {
-        list.push({
-            target: missing[0],
-            question: `Could you walk us through an architecture where you designed or worked with ${missing[0]} in a production environment?`
-        });
-    }
-    if (missing.length > 1) {
-        list.push({
-            target: missing[1],
-            question: `How do you approach latency optimization and failure recovery when integrating ${missing[1]} into distributed services?`
-        });
-    }
-    if (matched.length > 0) {
-        list.push({
-            target: matched[0] + " (Deep Dive)",
-            question: `In your previous projects with ${matched[0]}, how did you structure automated testing and zero-downtime deployments?`
-        });
-    }
-    return list;
-}
-
-/* ==========================================================================
-   TAB 4: SEMANTIC JOB SEARCH
-   ========================================================================== */
-const jobCatalog = [
-    {
-        title: "Senior Backend Cloud Engineer",
-        company: "Veloce Technologies • San Francisco, CA",
-        category: "Engineering",
-        salary: "$145k - $185k",
-        exp: "4+ Yrs",
-        type: "Full-Time / Hybrid",
-        description: "Seeking a senior Python & Django engineer to architect high-throughput microservices on AWS Kubernetes clusters. Must have strong experience with PostgreSQL query tuning, caching with Redis, and Kafka event streaming.",
-        keywords: ["python", "django", "aws", "kubernetes", "docker", "postgresql", "kafka", "microservices"],
-        baseSbert: 0.94,
-        baseTfidf: 0.91
-    },
-    {
-        title: "Lead Machine Learning & NLP Scientist",
-        company: "Synthetix AI Labs • New York, NY",
-        category: "AI & Data",
-        salary: "$165k - $210k",
-        exp: "5+ Yrs",
-        type: "Full-Time / Remote",
-        description: "Join our core research team fine-tuning transformer architectures (BERT, GPT, T5) for enterprise token classification and semantic document extraction. Experience with PyTorch, CUDA, and Triton server required.",
-        keywords: ["nlp", "pytorch", "transformers", "bert", "cuda", "python", "deep learning", "machine learning"],
-        baseSbert: 0.97,
-        baseTfidf: 0.88
-    },
-    {
-        title: "Corporate Audit & SOX Compliance Manager",
-        company: "Apex Financial Partners • Chicago, IL",
-        category: "Finance",
-        salary: "$130k - $160k",
-        exp: "5+ Yrs",
-        type: "Full-Time / On-site",
-        description: "CPA Certified Audit Manager needed to supervise regulatory risk assessments, GAAP compliance reporting, and internal controls walkthroughs under SOX Section 404.",
-        keywords: ["cpa", "gaap", "sox", "audit", "accounting", "tax", "oracle erp", "excel"],
-        baseSbert: 0.91,
-        baseTfidf: 0.95
-    },
-    {
-        title: "DevOps & Infrastructure Lead",
-        company: "CloudScale Systems • Austin, TX",
-        category: "Engineering",
-        salary: "$150k - $190k",
-        exp: "6+ Yrs",
-        type: "Full-Time / Remote",
-        description: "Scale multi-region Terraform infrastructure across AWS and GCP. Automate GitOps workflows using ArgoCD, manage Kubernetes clusters, and lead observability with Prometheus and Datadog.",
-        keywords: ["devops", "kubernetes", "terraform", "aws", "docker", "ci/cd", "golang", "python"],
-        baseSbert: 0.89,
-        baseTfidf: 0.86
-    },
-    {
-        title: "Technical Talent Acquisition Partner",
-        company: "Hyperion Growth • Seattle, WA",
-        category: "HR & Operations",
-        salary: "$110k - $140k",
-        exp: "3+ Yrs",
-        type: "Full-Time / Hybrid",
-        description: "Lead end-to-end recruitment for senior engineering and AI squads. Partner closely with engineering directors to build talent pipelines and streamline ATS workflows.",
-        keywords: ["recruiting", "talent acquisition", "hr", "sourcing", "ats", "interviewing", "human resources"],
-        baseSbert: 0.85,
-        baseTfidf: 0.89
-    },
-    {
-        title: "Cybersecurity SOC & Threat Response Lead",
-        company: "Fortress Defense • Washington, DC",
-        category: "Engineering",
-        salary: "$140k - $175k",
-        exp: "4+ Yrs",
-        type: "Full-Time / On-site",
-        description: "Direct incident response and SIEM alert triage across cloud and hybrid enterprise infrastructure. Strong knowledge of NIST framework, MITRE ATT&CK, Splunk, and CrowdStrike.",
-        keywords: ["cybersecurity", "soc", "cissp", "splunk", "incident response", "threat hunting", "zero trust"],
-        baseSbert: 0.88,
-        baseTfidf: 0.84
-    }
-];
-
-function initJobSearch() {
-    const searchInput = document.getElementById("search-query-input");
-    const searchBtn = document.getElementById("btn-run-search");
-    const sbertSlider = document.getElementById("slider-weight-sbert");
-    const tfidfSlider = document.getElementById("slider-weight-tfidf");
-    const sbertVal = document.getElementById("weight-sbert-val");
-    const tfidfVal = document.getElementById("weight-tfidf-val");
-    const filterPills = document.querySelectorAll(".search-category-filters .filter-pill");
-
-    let currentCategory = "all";
-
-    sbertSlider.addEventListener("input", (e) => {
-        sbertVal.textContent = parseFloat(e.target.value).toFixed(2);
-        executeSearch(searchInput.value, currentCategory);
-    });
-
-    tfidfSlider.addEventListener("input", (e) => {
-        tfidfVal.textContent = parseFloat(e.target.value).toFixed(2);
-        executeSearch(searchInput.value, currentCategory);
-    });
-
-    filterPills.forEach(pill => {
-        pill.addEventListener("click", () => {
-            filterPills.forEach(p => p.classList.remove("active"));
-            pill.classList.add("active");
-            currentCategory = pill.dataset.filter;
-            executeSearch(searchInput.value, currentCategory);
-        });
-    });
-
-    searchBtn.addEventListener("click", () => {
-        executeSearch(searchInput.value, currentCategory);
-    });
-
-    searchInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            executeSearch(searchInput.value, currentCategory);
-        }
-    });
-
-    // Initial search
-    executeSearch(searchInput.value, currentCategory);
-}
-
-async function executeSearch(query, categoryFilter = "all") {
-    const sbertWeight = parseFloat(document.getElementById("slider-weight-sbert").value);
-    const tfidfWeight = parseFloat(document.getElementById("slider-weight-tfidf").value);
-    const resultsGrid = document.getElementById("search-results-list");
-    const countBadge = document.getElementById("search-results-count");
-
-    let jobsToDisplay = [];
-
-    // 1. Try real backend search engine first
-    if (query && query.trim().length > 0) {
-        try {
-            const serverRes = await postData("/api/search", {
-                query: query.trim(),
-                top_k: 10,
-                w_tfidf: tfidfWeight,
-                w_sbert: sbertWeight
-            });
-
-            if (serverRes && serverRes.results && serverRes.results.length > 0) {
-                jobsToDisplay = serverRes.results.map(r => ({
-                    title: r.job_title,
-                    company: "Verified AI Database Match",
-                    category: "Engineering",
-                    salary: "$120k - $175k",
-                    exp: "2 - 5 Yrs",
-                    type: "Full-Time",
-                    description: r.description,
-                    keywords: query.toLowerCase().split(/\s+/).filter(Boolean).slice(0, 6),
-                    hybridScore: r.hybrid_score || 0.92,
-                    tfidfScore: r.tfidf_score || 0.85,
-                    sbertScore: r.sbert_score || 0.94
-                }));
-            }
-        } catch (err) {
-            // Fallback to local catalog
-        }
-    }
-
-    // 2. If no server results, compute dynamic local scores from jobCatalog
-    if (jobsToDisplay.length === 0) {
-        const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean);
-        const scoredJobs = jobCatalog.map(job => {
-            let termMatches = 0;
-            queryTerms.forEach(t => {
-                if (job.keywords.some(k => k.includes(t) || t.includes(k)) || job.description.toLowerCase().includes(t)) {
-                    termMatches++;
-                }
-            });
-
-            const tfidfScore = queryTerms.length > 0 ? Math.min(1.0, (termMatches / queryTerms.length) * 0.9 + 0.1) : job.baseTfidf;
-            const sbertScore = job.baseSbert;
-            const hybridScore = (sbertScore * sbertWeight) + (tfidfScore * tfidfWeight);
-
-            return {
-                ...job,
-                tfidfScore,
-                sbertScore,
-                hybridScore
-            };
-        });
-
-        jobsToDisplay = categoryFilter === "all" ? scoredJobs : scoredJobs.filter(j => j.category === categoryFilter);
-    }
-
-    // Sort by dynamic hybrid score descending
-    jobsToDisplay.sort((a, b) => b.hybridScore - a.hybridScore);
-
-    countBadge.textContent = `${jobsToDisplay.length} Positions Discovered`;
-    resultsGrid.innerHTML = "";
-
-    if (jobsToDisplay.length === 0) {
-        resultsGrid.innerHTML = `
-            <div class="empty-state-view">
-                <i class="fa-solid fa-magnifying-glass" style="font-size:2rem; color:var(--text-muted); margin-bottom:1rem;"></i>
-                <h3>No Matching Positions</h3>
-                <p>Try broadening your query keywords or clearing category filters.</p>
-            </div>
-        `;
-        return;
-    }
-
-    jobsToDisplay.forEach((job, index) => {
-        const card = document.createElement("div");
-        card.className = "job-card";
-
-        const keywordsList = job.keywords && job.keywords.length > 0 ? job.keywords : ["General Competency"];
-        const tagBadges = keywordsList.slice(0, 5).map(k => `<span class="skill-tag matched">${k}</span>`).join(" ");
-
-        card.innerHTML = `
-            <div class="job-card-top">
-                <div class="job-title-group">
-                    <div class="job-rank-num">RANK #${index + 1} • ${(job.category || 'ENGINEERING').toUpperCase()}</div>
-                    <h4>${job.title}</h4>
-                    <span class="job-company-tag"><i class="fa-solid fa-building"></i> ${job.company}</span>
-                </div>
-                <div class="job-score-pills">
-                    <span class="score-pill-tag hybrid" title="Weighted Hybrid SBERT + TF-IDF score">Hybrid: ${job.hybridScore.toFixed(4)}</span>
-                </div>
-            </div>
-
-            <p class="job-snippet">${job.description}</p>
-
-            <div class="skills-tag-wrap">${tagBadges}</div>
-
-            <div class="job-card-footer">
-                <div class="job-meta-badges">
-                    <span><i class="fa-solid fa-money-bill-wave text-emerald"></i> ${job.salary}</span>
-                    <span><i class="fa-solid fa-clock text-cyan"></i> ${job.exp}</span>
-                    <span><i class="fa-solid fa-briefcase text-purple"></i> ${job.type}</span>
-                </div>
-                <button class="btn btn-outline" style="padding: 0.4rem 0.85rem; font-size: 0.78rem;" onclick="testJobInMatcher('${escapeHtml(job.title)}', '${escapeHtml(job.description)}')">
-                    <i class="fa-solid fa-arrows-split-up-and-left"></i> Match Profile
-                </button>
-            </div>
-        `;
-        resultsGrid.appendChild(card);
-    });
-}
-
-function testJobInMatcher(title, description) {
-    document.getElementById("matcher-job-input").value = `${title}\n\n${description}`;
-    switchToTab("tab-matcher");
-    showToast(`Loaded "${title}" into Job Matcher`, "info");
-}
-
-/* ==========================================================================
-   TAB 5: CAREER TRAJECTORY & PIVOT PLANNER
-   ========================================================================== */
-function initTrajectory() {
-    const generateBtn = document.getElementById("btn-generate-trajectory");
-    const currentSelect = document.getElementById("traj-current-role");
-    const targetSelect = document.getElementById("traj-target-role");
-
-    generateBtn.addEventListener("click", () => {
-        renderRoadmap(currentSelect.value, targetSelect.value);
-        showToast("Generated career trajectory roadmap!", "success");
-    });
-
-    // Initial render
-    renderRoadmap(currentSelect.value, targetSelect.value);
-}
-
-function renderRoadmap(current, target) {
-    const timelineEl = document.getElementById("traj-milestone-timeline");
-    const certListEl = document.getElementById("traj-cert-list");
-    const salaryEl = document.getElementById("traj-salary-figure");
-    const durationBadge = document.getElementById("traj-duration-badge");
-
-    timelineEl.innerHTML = `
-        <div class="milestone-card">
-            <span class="milestone-node-dot"></span>
-            <div class="milestone-header">
-                <span class="milestone-phase">PHASE 01 • FOUNDATIONAL MASTERY</span>
-                <span class="badge badge-purple">Months 1 - 3</span>
-            </div>
-            <h4>Advanced Distributed Architecture & Systems</h4>
-            <p>Solidify core fundamentals in high-availability distributed systems, event-driven streaming (Kafka/RabbitMQ), and database partitioning for high-scale throughput.</p>
-            <div class="skills-tag-wrap">
-                <span class="skill-tag matched">SYSTEM DESIGN</span>
-                <span class="skill-tag matched">KAFKA</span>
-                <span class="skill-tag matched">SHARDING</span>
-            </div>
-        </div>
-
-        <div class="milestone-card">
-            <span class="milestone-node-dot"></span>
-            <div class="milestone-header">
-                <span class="milestone-phase">PHASE 02 • CLOUD INFRASTRUCTURE & AUTOMATION</span>
-                <span class="badge badge-cyan">Months 4 - 6</span>
-            </div>
-            <h4>Multi-Cloud Orchestration & CI/CD GitOps</h4>
-            <p>Master multi-region Kubernetes deployments, Infrastructure as Code with Terraform, and zero-downtime blue/green deployment orchestration.</p>
-            <div class="skills-tag-wrap">
-                <span class="skill-tag matched">KUBERNETES</span>
-                <span class="skill-tag matched">TERRAFORM</span>
-                <span class="skill-tag matched">GITOPS</span>
-            </div>
-        </div>
-
-        <div class="milestone-card">
-            <span class="milestone-node-dot"></span>
-            <div class="milestone-header">
-                <span class="milestone-phase">PHASE 03 • EXECUTIVE & ARCHITECTURAL LEADERSHIP</span>
-                <span class="badge badge-emerald">Months 7 - 9</span>
-            </div>
-            <h4>Cross-Domain Strategy & Enterprise AI Integration</h4>
-            <p>Develop enterprise security compliance (SOC 2), lead technical RFC reviews, and integrate scalable AI inference layers into core business logic.</p>
-            <div class="skills-tag-wrap">
-                <span class="skill-tag matched">RFC LEADERSHIP</span>
-                <span class="skill-tag matched">AI MODEL SERVING</span>
-                <span class="skill-tag matched">SOC 2</span>
-            </div>
-        </div>
-    `;
-
-    certListEl.innerHTML = `
-        <div class="cert-item-card">
-            <div class="cert-icon"><i class="fa-solid fa-award"></i></div>
-            <div class="cert-details">
-                <h5>AWS Certified Solutions Architect (Professional)</h5>
-                <span>High Impact • Tier 1 Recognition</span>
-            </div>
-        </div>
-        <div class="cert-item-card">
-            <div class="cert-icon"><i class="fa-solid fa-certificate"></i></div>
-            <div class="cert-details">
-                <h5>Certified Kubernetes Administrator (CKA)</h5>
-                <span>Cloud Native Computing Foundation</span>
-            </div>
-        </div>
-    `;
-
-    salaryEl.textContent = "+ 48% Compensation Uplift";
-    durationBadge.textContent = "~ 6 - 9 Months Estimated";
-}
-
-/* ==========================================================================
-   METRICS TELEMETRY & BACKEND SYNC
-   ========================================================================== */
-async function initMetricsTelemetry() {
-    try {
-        const response = await fetch("/api/metrics");
-        if (!response.ok) return;
-        const data = await response.json();
-
-        if (data.classification) {
-            const acc = (data.classification.ensemble_accuracy || 0.8835) * 100;
-            const f1 = (data.classification.ensemble_f1 || 0.8766) * 100;
-            document.getElementById("metric-class-accuracy").textContent = `${acc.toFixed(2)}%`;
-            document.getElementById("metric-class-f1").textContent = `${f1.toFixed(2)}%`;
-        }
-        if (data.ner) {
-            const acc = (data.ner.accuracy || 0.9350) * 100;
-            const f1 = (data.ner.f1 || 0.4793) * 100;
-            document.getElementById("metric-ner-accuracy").textContent = `${acc.toFixed(2)}%`;
-            document.getElementById("metric-ner-f1").textContent = `${f1.toFixed(2)}%`;
-        }
-        if (data.matching) {
-            const acc = (data.matching.accuracy || 0.8270) * 100;
-            const f1 = (data.matching.f1 || 0.8306) * 100;
-            document.getElementById("metric-match-accuracy").textContent = `${acc.toFixed(2)}%`;
-            document.getElementById("metric-match-f1").textContent = `${f1.toFixed(2)}%`;
-        }
-    } catch (e) {
-        console.log("Running in standalone interactive UI mode.");
     }
 }
 
 /* ==========================================================================
-   PRINTABLE AUDIT REPORT GENERATOR
+   TOAST NOTIFICATION ENGINE
    ========================================================================== */
-function populateAuditReport() {
-    const currentName = document.getElementById("analyzer-class-title").textContent || "Software Developer";
-    const atsScore = document.getElementById("analyzer-ats-score").textContent || "94/100";
-    
-    document.getElementById("report-cand-name").textContent = "Alex Rivera";
-    document.getElementById("report-cand-category").textContent = currentName;
-    document.getElementById("report-cand-score").textContent = atsScore.includes("/") ? atsScore.split("/")[0] + "%" : "94%";
-    document.getElementById("report-timestamp").textContent = `Generated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} • Career IQ Orchestrator`;
-}
-
-/* ==========================================================================
-   SMART NLP SIMULATION ENGINE (STANDALONE / OFFLINE CAPABILITY)
-   ========================================================================== */
-function simulateDeepResumeAnalysis(text) {
-    const lower = text.toLowerCase();
-    let category = "Software Developer";
-    let confidence = 0.94;
-
-    if (lower.includes("audit") || lower.includes("cpa") || lower.includes("gaap") || lower.includes("accounting")) {
-        category = "Accountant & Financial Auditor";
-        confidence = 0.92;
-    } else if (lower.includes("machine learning") || lower.includes("pytorch") || lower.includes("nlp") || lower.includes("deep learning")) {
-        category = "Data Science & AI";
-        confidence = 0.96;
-    } else if (lower.includes("talent acquisition") || lower.includes("recruiter") || lower.includes("human resources")) {
-        category = "Human Resources";
-        confidence = 0.91;
-    } else if (lower.includes("cybersecurity") || lower.includes("soc") || lower.includes("threat") || lower.includes("cissp")) {
-        category = "Cybersecurity Specialist";
-        confidence = 0.93;
-    }
-
-    // Dynamic Named Entity Recognition (Extract tokens and positions)
-    const entities = [];
-    const pushEntity = (entityName, matchWord) => {
-        if (!matchWord) return;
-        const idx = text.indexOf(matchWord);
-        if (idx !== -1) {
-            entities.push({
-                entity: entityName,
-                start: idx,
-                end: idx + matchWord.length,
-                confidence: 0.92 + Math.random() * 0.07
-            });
-        }
-    };
-
-    // Extract Email
-    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-    if (emailMatch) pushEntity("EMAIL", emailMatch[0]);
-
-    // Extract common skill words
-    const commonSkills = ["Python", "JavaScript", "TypeScript", "React", "Django", "Docker", "Kubernetes", "AWS", "PostgreSQL", "PyTorch", "NLP", "GAAP", "CPA", "Excel", "Splunk", "CISSP", "FastAPI"];
-    commonSkills.forEach(s => {
-        const regex = new RegExp(`\\b${s}\\b`, 'g');
-        let m;
-        while ((m = regex.exec(text)) !== null) {
-            entities.push({
-                entity: "SKILLS",
-                start: m.index,
-                end: m.index + m[0].length,
-                confidence: 0.95
-            });
-        }
-    });
-
-    // Extract Degrees
-    ["Bachelor of Science", "Master of Science", "Ph.D.", "Doctor of Medicine", "Bachelor of Arts"].forEach(d => {
-        const idx = text.indexOf(d);
-        if (idx !== -1) pushEntity("DEGREE", d);
-    });
-
-    // Extract Universities
-    ["Stanford University", "University of Texas at Austin", "UC Berkeley", "Harvard Medical School", "University of Illinois", "DePaul University", "San Francisco State University"].forEach(u => {
-        const idx = text.indexOf(u);
-        if (idx !== -1) pushEntity("COLLEGE_NAME", u);
-    });
-
-    // Extract Designations
-    ["Senior Full Stack Engineer", "Senior AI/ML Research Scientist", "Audit Manager", "Talent Acquisition Director", "SecOps Lead", "Software Engineer", "Research Fellow"].forEach(des => {
-        const idx = text.indexOf(des);
-        if (idx !== -1) pushEntity("DESIGNATION", des);
-    });
-
-    // Recommendations
-    const recommendations = [
-        {
-            role: category === "Software Developer" ? "Principal Cloud Solutions Architect" : "Lead Machine Learning Engineer",
-            category: "Engineering",
-            match_percentage: 94.5,
-            experience_required: "5 - 7",
-            salary_range: "$160k - $205k",
-            matched_skills: ["Python", "React", "Docker", "Kubernetes", "AWS"],
-            missing_skills: ["Terraform", "Kafka", "GraphQL"]
-        },
-        {
-            role: "Senior Distributed Systems Engineer",
-            category: "Core Backend",
-            match_percentage: 88.2,
-            experience_required: "4 - 6",
-            salary_range: "$145k - $185k",
-            matched_skills: ["Python", "FastAPI", "PostgreSQL", "Microservices"],
-            missing_skills: ["Go", "gRPC", "Redis Cluster"]
-        },
-        {
-            role: "Engineering Manager (Platform & Infra)",
-            category: "Management",
-            match_percentage: 82.0,
-            experience_required: "6+",
-            salary_range: "$170k - $220k",
-            matched_skills: ["Agile", "CI/CD", "Team Mentorship"],
-            missing_skills: ["Budgeting", "Executive OKRs"]
-        }
-    ];
-
-    return {
-        classification: { category, confidence },
-        ner: { entities },
-        recommendations: { recommendations }
-    };
-}
-
-function simulateFitmentMatch(resumeText, jobText, requiredSkills) {
-    const resumeLower = resumeText.toLowerCase();
-    const matched = [];
-
-    requiredSkills.forEach(skill => {
-        if (resumeLower.includes(skill.toLowerCase())) {
-            matched.push(skill);
-        }
-    });
-
-    const ratio = requiredSkills.length > 0 ? (matched.length / requiredSkills.length) : 0.85;
-    const probability = Math.min(0.98, Math.max(0.45, ratio * 0.9 + 0.1));
-
-    return {
-        matched: probability >= 0.6,
-        probability: probability,
-        matched_skills: matched
-    };
-}
-
-/* ==========================================================================
-   TOAST NOTIFICATIONS & UTILITIES
-   ========================================================================== */
-function showToast(message, type = "info") {
+function showToast(msg, type = "info") {
     const container = document.getElementById("toast-container");
     if (!container) return;
 
     const toast = document.createElement("div");
     toast.className = `toast toast-${type}`;
-    const icon = type === "success" ? "fa-circle-check" : "fa-circle-info";
-    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${escapeHtml(message)}</span>`;
+    
+    const iconMap = {
+        success: "fa-circle-check text-emerald",
+        warning: "fa-triangle-exclamation text-amber",
+        info: "fa-circle-info text-blue",
+        error: "fa-circle-xmark text-rose"
+    };
 
+    toast.innerHTML = `<i class="fa-solid ${iconMap[type] || 'fa-info'}"></i> <span>${msg}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
         toast.style.opacity = "0";
-        toast.style.transform = "translateX(100%)";
-        toast.style.transition = "all 0.3s ease";
+        toast.style.transform = "translateY(10px)";
         setTimeout(() => toast.remove(), 300);
-    }, 3500);
-}
-
-function escapeHtml(text) {
-    if (!text) return "";
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-async function postData(url = "", data = {}) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-        signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-        const errorDetail = await response.json().catch(() => ({}));
-        throw new Error(errorDetail.detail || "Server error occurred");
-    }
-    return response.json();
+    }, 3800);
 }

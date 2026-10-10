@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career IQ - AI Talent Intelligence & Career Suite</title>
-    <meta name="description" content="Career IQ is an enterprise AI talent intelligence suite for resume classification, named entity extraction, semantic job matching, and career trajectory mapping.">
+    <meta name="description" content="Career IQ is an enterprise AI talent intelligence suite for resume processing, ATS evaluation, tailored resume optimization, semantic job matching, personalized voice interview, and career readiness reporting.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <!-- Background Ambient Glow Orbs -->
@@ -36,20 +36,46 @@
                 </div>
             </div>
 
-            <div class="nav-section-label">Navigation</div>
+            <div class="nav-section-label">Workflow Journey</div>
             <nav class="sidebar-nav">
                 <button class="nav-item active" data-tab="tab-overview" id="nav-overview">
                     <div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div>
-                    <span class="nav-label">Overview & Analytics</span>
+                    <span class="nav-label">Overview & Flow</span>
                 </button>
-                <button class="nav-item" data-tab="tab-analyzer" id="nav-analyzer">
-                    <div class="nav-icon"><i class="fa-solid fa-file-lines"></i></div>
-                    <span class="nav-label">Resume Studio & NER</span>
+                <button class="nav-item" data-tab="tab-upload" id="nav-upload">
+                    <div class="nav-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <span class="nav-label">1. Upload Resume</span>
                 </button>
-                <button class="nav-item" data-tab="tab-matcher" id="nav-matcher">
-                    <div class="nav-icon"><i class="fa-solid fa-bolt"></i></div>
-                    <span class="nav-label">Job Matcher & Fitment</span>
+                <button class="nav-item" data-tab="tab-ner" id="nav-ner">
+                    <div class="nav-icon"><i class="fa-solid fa-tags"></i></div>
+                    <span class="nav-label">2. Processing & NER</span>
                 </button>
+                <button class="nav-item" data-tab="tab-ats" id="nav-ats">
+                    <div class="nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <span class="nav-label">3. ATS Evaluation</span>
+                </button>
+                <button class="nav-item" data-tab="tab-optimize" id="nav-optimize">
+                    <div class="nav-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <span class="nav-label">4. Resume Optimizer</span>
+                </button>
+                <button class="nav-item" data-tab="tab-matching" id="nav-matching">
+                    <div class="nav-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                    <span class="nav-label">5. Role Match & Recs</span>
+                </button>
+                <button class="nav-item" data-tab="tab-interview" id="nav-interview">
+                    <div class="nav-icon"><i class="fa-solid fa-microphone-lines"></i></div>
+                    <span class="nav-label">6. AI Voice Interview</span>
+                </button>
+                <button class="nav-item" data-tab="tab-evaluation" id="nav-evaluation">
+                    <div class="nav-icon"><i class="fa-solid fa-brain"></i></div>
+                    <span class="nav-label">7. Answer Evaluation</span>
+                </button>
+                <button class="nav-item" data-tab="tab-report" id="nav-report">
+                    <div class="nav-icon"><i class="fa-solid fa-award"></i></div>
+                    <span class="nav-label">8. Readiness Report</span>
+                </button>
+
+                <div class="nav-section-label" style="margin-top: 14px;">Talent Tools</div>
                 <button class="nav-item" data-tab="tab-search" id="nav-search">
                     <div class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                     <span class="nav-label">Semantic Job Search</span>
@@ -65,7 +91,7 @@
                     <span class="widget-title"><i class="fa-solid fa-circle-check text-emerald"></i> System Status</span>
                     <span class="live-tag">Online</span>
                 </div>
-                <p class="system-mode-tag">5 ML Engines Active</p>
+                <p class="system-mode-tag">8-Step Workflow Active</p>
             </div>
 
             <div class="sidebar-footer">
@@ -75,7 +101,7 @@
                     </div>
                     <div class="user-meta">
                         <span class="user-name">Talent Studio</span>
-                        <span class="user-role">Career IQ v2.4</span>
+                        <span class="user-role">Career IQ v3.0</span>
                     </div>
                 </div>
             </div>
@@ -90,8 +116,8 @@
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <div class="page-heading">
-                        <h1 id="page-title">Overview & Model Performance</h1>
-                        <p id="page-subtitle">Real-time architecture benchmarks and talent orchestration telemetry</p>
+                        <h1 id="page-title">Career Readiness Workflow</h1>
+                        <p id="page-subtitle">End-to-end talent intelligence: Resume parsing, ATS scoring, tailored optimization, voice interview & readiness evaluation</p>
                     </div>
                 </div>
 
@@ -99,71 +125,233 @@
                     <div class="header-action-group">
                         <button class="btn btn-outline" id="btn-open-samples" title="Load sample resumes & jobs">
                             <i class="fa-solid fa-folder-open"></i>
-                            <span>Load Demo Data</span>
+                            <span>Load Demo Candidate</span>
                         </button>
                         <button class="btn btn-primary" id="btn-export-report" title="Export talent audit report">
-                            <i class="fa-solid fa-file-arrow-down"></i>
-                            <span>Audit Report</span>
+                            <i class="fa-solid fa-award"></i>
+                            <span>Readiness Audit</span>
                         </button>
                     </div>
                 </div>
             </header>
 
+            <!-- Global 8-Step Interactive Pipeline Stepper Bar -->
+            <div class="workflow-stepper-container">
+                <div class="workflow-stepper-track">
+                    <button class="step-node active" data-tab="tab-upload" id="step-btn-1">
+                        <span class="step-num-badge">1</span>
+                        <span>Upload Resume</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-ner" id="step-btn-2">
+                        <span class="step-num-badge">2</span>
+                        <span>Processing & NER</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-ats" id="step-btn-3">
+                        <span class="step-num-badge">3</span>
+                        <span>ATS Evaluation</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-optimize" id="step-btn-4">
+                        <span class="step-num-badge">4</span>
+                        <span>Optimization</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-matching" id="step-btn-5">
+                        <span class="step-num-badge">5</span>
+                        <span>Role Match & Recs</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-interview" id="step-btn-6">
+                        <span class="step-num-badge">6</span>
+                        <span>Voice Interview</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-evaluation" id="step-btn-7">
+                        <span class="step-num-badge">7</span>
+                        <span>Answer Evaluation</span>
+                    </button>
+                    <div class="step-arrow-divider"><i class="fa-solid fa-chevron-right"></i></div>
+
+                    <button class="step-node" data-tab="tab-report" id="step-btn-8">
+                        <span class="step-num-badge">8</span>
+                        <span>Readiness Report</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Main Tabs Container -->
             <main class="content-viewport">
 
                 <!-- =========================================================
-                     TAB 1: OVERVIEW & ANALYTICS (AI ARCHITECTURE COMMAND DECK)
+                     TAB: OVERVIEW & ARCHITECTURE FLOWCHART
                      ========================================================= -->
                 <section class="tab-pane active" id="tab-overview">
-                    
-                    <!-- AI Intelligence Hub Hero Header -->
                     <div class="deck-hero-banner glass-panel">
                         <div class="deck-hero-content">
                             <div class="deck-hero-tag-row">
-                                <span class="hero-badge"><i class="fa-solid fa-microchip"></i> Multi-Engine Architecture</span>
-                                <span class="deck-status-pill"><span class="pulse-dot"></span> 5 ML Engines Synchronized</span>
-                                <span class="deck-status-pill"><i class="fa-solid fa-bolt text-blue"></i> Sub-20ms Inference</span>
+                                <span class="hero-badge"><i class="fa-solid fa-network-wired"></i> Unified 8-Step Lifecycle</span>
+                                <span class="deck-status-pill"><span class="pulse-dot"></span> 5 ML Models + Speech AI Connected</span>
+                                <span class="deck-status-pill"><i class="fa-solid fa-bolt text-blue"></i> Full Talent Intelligence Suite</span>
                             </div>
-                            <h2>Talent Intelligence & Orchestration Command Deck</h2>
-                            <p>Real-time architectural telemetry across sequence classifiers, transformer token NER, bi-encoder semantic search, and gradient-boosted decision trees.</p>
+                            <h2>Career Readiness & Talent Orchestration Hub</h2>
+                            <p>Follow the complete candidate journey from initial PDF/DOCX resume upload to deep NER token extraction, ATS structure analysis, tailored resume optimization, semantic job matching, personalized AI voice interview, and executive readiness reporting.</p>
                         </div>
                         <div class="deck-hero-actions">
-                            <button class="btn btn-primary" onclick="switchToTab('tab-analyzer')">
-                                <i class="fa-solid fa-file-circle-check"></i> Launch Resume Studio
+                            <button class="btn btn-primary" onclick="switchToTab('tab-upload')">
+                                <i class="fa-solid fa-play"></i> Start 8-Step Journey
                             </button>
-                            <button class="btn btn-outline" onclick="switchToTab('tab-matcher')">
-                                <i class="fa-solid fa-arrows-split-up-and-left"></i> Run Fitment Matcher
+                            <button class="btn btn-outline" onclick="loadSampleResume('dev', true); switchToTab('tab-upload');">
+                                <i class="fa-solid fa-sparkles"></i> Load Demo Profile
                             </button>
                         </div>
                     </div>
 
-                    <!-- AI Intelligence Bento Hub (4 Models with Circular SVG Donut Gauges & Spec Matrix) -->
+                    <!-- Interactive 8-Step Application Architecture Flowchart -->
+                    <div class="glass-panel" style="margin-bottom: 24px; padding: 26px;">
+                        <div class="panel-headline" style="margin-bottom: 20px;">
+                            <div class="headline-title">
+                                <i class="fa-solid fa-diagram-project text-blue"></i>
+                                <div>
+                                    <h3>Application Flowchart & Lifecycle Circuit</h3>
+                                    <p class="panel-subtitle">Click any step to inspect its live engine and trigger telemetry</p>
+                                </div>
+                            </div>
+                            <span class="badge badge-blue"><i class="fa-solid fa-circle-nodes"></i> Synchronized Circuit</span>
+                        </div>
+
+                        <div class="fleet-bento-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-upload')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 01 • INGESTION</span>
+                                        <h4>1. Upload Resume</h4>
+                                        <span class="fleet-algo-badge">PDF / DOCX Binary Parsers</span>
+                                    </div>
+                                    <div class="pick-icon icon-blue"><i class="fa-solid fa-file-pdf"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Extracts clean text and document hierarchy from PDF, DOCX, and TXT files.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Open Ingestion <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-ner')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 02 • EXTRACTION</span>
+                                        <h4>2. Processing & NER</h4>
+                                        <span class="fleet-algo-badge badge-cyan-pill">Transformer Token Tagger</span>
+                                    </div>
+                                    <div class="pick-icon icon-cyan"><i class="fa-solid fa-tags"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Extracts skills, education, experience, projects, certs, and job roles.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Inspect Entities <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-ats')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 03 • COMPATIBILITY</span>
+                                        <h4>3. ATS Evaluation</h4>
+                                        <span class="fleet-algo-badge badge-emerald-pill">Structure & Metric Audit</span>
+                                    </div>
+                                    <div class="pick-icon icon-emerald"><i class="fa-solid fa-shield-halved"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Evaluates resume structure, strengths, weaknesses, and ATS score (0-100).</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">View ATS Score <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-optimize')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 04 • TAILORING</span>
+                                        <h4>4. Resume Optimizer</h4>
+                                        <span class="fleet-algo-badge">Zero-Hallucination Rewriter</span>
+                                    </div>
+                                    <div class="pick-icon icon-amber"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Generates an improved tailored resume with active verbs and DOCX download.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Optimize Resume <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-matching')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 05 • FITMENT</span>
+                                        <h4>5. Match & Recommend</h4>
+                                        <span class="fleet-algo-badge badge-blue">SBERT + XGBoost</span>
+                                    </div>
+                                    <div class="pick-icon icon-blue"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">5A: Role recommendations & skill gaps. 5B: Job match fitment probability.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Explore Match <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-interview')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 06 • VOICE AI</span>
+                                        <h4>6. AI Voice Interview</h4>
+                                        <span class="fleet-algo-badge badge-rose-pill">Speech TTS + Mic STT</span>
+                                    </div>
+                                    <div class="pick-icon icon-rose"><i class="fa-solid fa-microphone-lines"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Asks role questions via speech voice and captures candidate spoken answers.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Launch Interview <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-evaluation')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 07 • RUBRIC</span>
+                                        <h4>7. Answer Evaluation</h4>
+                                        <span class="fleet-algo-badge badge-cyan-pill">Technical & Clarity Scorer</span>
+                                    </div>
+                                    <div class="pick-icon icon-cyan"><i class="fa-solid fa-brain"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Evaluates correctness, relevance, completeness, communication & follow-ups.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">Score Answer <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+
+                            <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-report')">
+                                <div class="fleet-card-top">
+                                    <div class="fleet-model-meta">
+                                        <span class="fleet-model-tier">STEP 08 • AUDIT</span>
+                                        <h4>8. Readiness Report</h4>
+                                        <span class="fleet-algo-badge badge-emerald-pill">Executive Career Audit</span>
+                                    </div>
+                                    <div class="pick-icon icon-emerald"><i class="fa-solid fa-award"></i></div>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;">Presents resume feedback, ATS score, job fit, interview metrics & PDF export.</p>
+                                <div class="fleet-card-footer"><span class="fleet-action-link">View Full Report <i class="fa-solid fa-arrow-right"></i></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Fleet Benchmark Donut Gauges -->
                     <div class="deck-section-title-wrap">
                         <div class="section-title-left">
                             <i class="fa-solid fa-layer-group text-blue"></i>
                             <div>
-                                <h3>AI Model Fleet Performance Matrix</h3>
-                                <p>Live benchmark metrics, architecture configurations, and single-click studio triggers</p>
+                                <h3>Underlying AI Model Benchmarks</h3>
+                                <p>Live benchmark metrics for sequence classification, token NER, bi-encoders, and gradient boosted trees</p>
                             </div>
-                        </div>
-                        <div class="fleet-filter-chips">
-                            <span class="filter-chip active">All Engines (5)</span>
-                            <span class="filter-chip" onclick="switchToTab('tab-analyzer')">NLP & NER</span>
-                            <span class="filter-chip" onclick="switchToTab('tab-matcher')">XGBoost Match</span>
-                            <span class="filter-chip" onclick="switchToTab('tab-search')">SBERT Vector</span>
                         </div>
                     </div>
 
                     <div class="fleet-bento-grid">
-                        
-                        <!-- Model 1: Category Classifier -->
-                        <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-analyzer')">
+                        <div class="fleet-bento-card glass-panel">
                             <div class="fleet-card-top">
                                 <div class="fleet-model-meta">
-                                    <span class="fleet-model-tier">ENGINE 01 • CLASSIFIER</span>
-                                    <h4>Resume Classification</h4>
-                                    <span class="fleet-algo-badge">Soft Voting Ensemble</span>
+                                    <span class="fleet-model-tier">CLASSIFIER</span>
+                                    <h4>Domain Classification</h4>
+                                    <span class="fleet-algo-badge">DistilBERT + SVM Ensemble</span>
                                 </div>
                                 <div class="gauge-donut-wrapper">
                                     <svg class="gauge-donut" viewBox="0 0 80 80">
@@ -176,34 +364,17 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="fleet-spec-list">
-                                <div class="spec-row">
-                                    <span class="spec-k">F1-Score</span>
-                                    <span class="spec-v text-blue" id="metric-class-f1">87.66%</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Architecture</span>
-                                    <span class="spec-v">TF-IDF + Ridge + SGD</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Domain Scope</span>
-                                    <span class="spec-v">25+ Job Categories</span>
-                                </div>
-                            </div>
-
-                            <div class="fleet-card-footer">
-                                <span class="fleet-latency"><i class="fa-solid fa-clock"></i> ~12ms</span>
-                                <span class="fleet-action-link">Explore Model <i class="fa-solid fa-arrow-right"></i></span>
+                                <div class="spec-row"><span class="spec-k">F1-Score</span><span class="spec-v text-blue" id="metric-class-f1">87.66%</span></div>
+                                <div class="spec-row"><span class="spec-k">Architecture</span><span class="spec-v">Soft Voting Ensemble</span></div>
                             </div>
                         </div>
 
-                        <!-- Model 2: DistilBERT NER Token Parser -->
-                        <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-analyzer')">
+                        <div class="fleet-bento-card glass-panel">
                             <div class="fleet-card-top">
                                 <div class="fleet-model-meta">
-                                    <span class="fleet-model-tier">ENGINE 02 • TRANSFORMER</span>
-                                    <h4>Named Entity (NER)</h4>
+                                    <span class="fleet-model-tier">TRANSFORMER</span>
+                                    <h4>Resume NER Extractor</h4>
                                     <span class="fleet-algo-badge badge-cyan-pill">DistilBERT Token Classifier</span>
                                 </div>
                                 <div class="gauge-donut-wrapper">
@@ -217,35 +388,18 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="fleet-spec-list">
-                                <div class="spec-row">
-                                    <span class="spec-k">Token F1</span>
-                                    <span class="spec-v text-cyan" id="metric-ner-f1">47.93%</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Entity Classes</span>
-                                    <span class="spec-v">14 Tag Types (BIO)</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Pretrained Base</span>
-                                    <span class="spec-v">HuggingFace DistilBERT</span>
-                                </div>
-                            </div>
-
-                            <div class="fleet-card-footer">
-                                <span class="fleet-latency"><i class="fa-solid fa-clock"></i> ~28ms</span>
-                                <span class="fleet-action-link">Inspect Tokens <i class="fa-solid fa-arrow-right"></i></span>
+                                <div class="spec-row"><span class="spec-k">Entities</span><span class="spec-v text-cyan">Skills, Degrees, Roles, Exp</span></div>
+                                <div class="spec-row"><span class="spec-k">Model Type</span><span class="spec-v">HuggingFace Fine-Tuned</span></div>
                             </div>
                         </div>
 
-                        <!-- Model 3: XGBoost Fitment Matcher -->
-                        <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-matcher')">
+                        <div class="fleet-bento-card glass-panel">
                             <div class="fleet-card-top">
                                 <div class="fleet-model-meta">
-                                    <span class="fleet-model-tier">ENGINE 03 • GRADIENT BOOST</span>
-                                    <h4>Job Fitment Classifier</h4>
-                                    <span class="fleet-algo-badge badge-emerald-pill">XGBoost Decision Engine</span>
+                                    <span class="fleet-model-tier">GRADIENT BOOST</span>
+                                    <h4>Job Fitment Matcher</h4>
+                                    <span class="fleet-algo-badge badge-emerald-pill">XGBoost + 384-D SBERT</span>
                                 </div>
                                 <div class="gauge-donut-wrapper">
                                     <svg class="gauge-donut" viewBox="0 0 80 80">
@@ -258,35 +412,18 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="fleet-spec-list">
-                                <div class="spec-row">
-                                    <span class="spec-k">Macro F1</span>
-                                    <span class="spec-v text-emerald" id="metric-match-f1">83.06%</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Feature Vector</span>
-                                    <span class="spec-v">384-D SBERT + Skill Cosine</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Calibration</span>
-                                    <span class="spec-v">Sigmoid Probability</span>
-                                </div>
-                            </div>
-
-                            <div class="fleet-card-footer">
-                                <span class="fleet-latency"><i class="fa-solid fa-clock"></i> ~15ms</span>
-                                <span class="fleet-action-link">Test Matcher <i class="fa-solid fa-arrow-right"></i></span>
+                                <div class="spec-row"><span class="spec-k">Macro F1</span><span class="spec-v text-emerald" id="metric-match-f1">83.06%</span></div>
+                                <div class="spec-row"><span class="spec-k">Features</span><span class="spec-v">Cosine + Skill Overlap</span></div>
                             </div>
                         </div>
 
-                        <!-- Model 4: Hybrid Semantic Job Search -->
-                        <div class="fleet-bento-card glass-panel" onclick="switchToTab('tab-search')">
+                        <div class="fleet-bento-card glass-panel">
                             <div class="fleet-card-top">
                                 <div class="fleet-model-meta">
-                                    <span class="fleet-model-tier">ENGINE 04 • BI-ENCODER</span>
-                                    <h4>Semantic Job Search</h4>
-                                    <span class="fleet-algo-badge badge-amber-pill">Hybrid SBERT + TF-IDF</span>
+                                    <span class="fleet-model-tier">BI-ENCODER</span>
+                                    <h4>Hybrid Job Search</h4>
+                                    <span class="fleet-algo-badge badge-amber-pill">SBERT + TF-IDF</span>
                                 </div>
                                 <div class="gauge-donut-wrapper">
                                     <svg class="gauge-donut" viewBox="0 0 80 80">
@@ -295,210 +432,62 @@
                                     </svg>
                                     <div class="gauge-donut-text">
                                         <span class="gauge-num" id="metric-search-p1">100.0%</span>
-                                        <span class="gauge-lbl">PRECISION</span>
+                                        <span class="gauge-lbl">P@1</span>
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="fleet-spec-list">
-                                <div class="spec-row">
-                                    <span class="spec-k">Precision @ 3</span>
-                                    <span class="spec-v text-amber" id="metric-search-p3">100.0%</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Retrieval Mode</span>
-                                    <span class="spec-v">Dense Vector + BM25 Lexical</span>
-                                </div>
-                                <div class="spec-row">
-                                    <span class="spec-k">Index Scale</span>
-                                    <span class="spec-v">Real-time K-NN Index</span>
-                                </div>
-                            </div>
-
-                            <div class="fleet-card-footer">
-                                <span class="fleet-latency"><i class="fa-solid fa-clock"></i> ~8ms</span>
-                                <span class="fleet-action-link">Search Jobs <i class="fa-solid fa-arrow-right"></i></span>
+                                <div class="spec-row"><span class="spec-k">Precision@3</span><span class="spec-v text-amber" id="metric-search-p3">100.0%</span></div>
+                                <div class="spec-row"><span class="spec-k">Weight Tuning</span><span class="spec-v">Dynamic Lexical / Vector</span></div>
                             </div>
                         </div>
-
-                    </div>
-
-                    <!-- Neural Circuit Orchestration & Verified Benchmarks Section -->
-                    <div class="deck-bottom-grid">
-                        
-                        <!-- Interactive Neural Pipeline Circuit -->
-                        <div class="glass-panel neural-circuit-panel">
-                            <div class="panel-headline">
-                                <div class="headline-title">
-                                    <i class="fa-solid fa-diagram-project text-blue"></i>
-                                    <div>
-                                        <h3>End-to-End Orchestration Circuit</h3>
-                                        <p class="panel-subtitle">Interactive pipeline flow from raw candidate ingestion to verified career recommendations</p>
-                                    </div>
-                                </div>
-                                <span class="badge badge-blue"><i class="fa-solid fa-circle-nodes"></i> Active Flow</span>
-                            </div>
-
-                            <div class="neural-circuit-canvas">
-                                
-                                <!-- Node 1 -->
-                                <div class="circuit-node" onclick="switchToTab('tab-analyzer')">
-                                    <div class="circuit-node-badge">STEP 01</div>
-                                    <div class="circuit-node-icon"><i class="fa-solid fa-file-invoice"></i></div>
-                                    <h5>Ingestion Layer</h5>
-                                    <p>PDF/Text Parser & Section Tokenizer</p>
-                                    <div class="circuit-node-tag">Raw Ingest</div>
-                                </div>
-
-                                <div class="circuit-stream-connector">
-                                    <div class="stream-line"></div>
-                                    <div class="stream-pulse"></div>
-                                </div>
-
-                                <!-- Node 2 -->
-                                <div class="circuit-node" onclick="switchToTab('tab-analyzer')">
-                                    <div class="circuit-node-badge">STEP 02</div>
-                                    <div class="circuit-node-icon"><i class="fa-solid fa-microchip"></i></div>
-                                    <h5>Category & NER</h5>
-                                    <p>Soft Voting & DistilBERT Entity Tagger</p>
-                                    <div class="circuit-node-tag">NLP Extraction</div>
-                                </div>
-
-                                <div class="circuit-stream-connector">
-                                    <div class="stream-line"></div>
-                                    <div class="stream-pulse delay-1"></div>
-                                </div>
-
-                                <!-- Node 3 -->
-                                <div class="circuit-node" onclick="switchToTab('tab-matcher')">
-                                    <div class="circuit-node-badge">STEP 03</div>
-                                    <div class="circuit-node-icon"><i class="fa-solid fa-sliders"></i></div>
-                                    <h5>Dense Fitment</h5>
-                                    <p>384-D SBERT + XGBoost Decision Tree</p>
-                                    <div class="circuit-node-tag">Alignment Matrix</div>
-                                </div>
-
-                                <div class="circuit-stream-connector">
-                                    <div class="stream-line"></div>
-                                    <div class="stream-pulse delay-2"></div>
-                                </div>
-
-                                <!-- Node 4 -->
-                                <div class="circuit-node" onclick="switchToTab('tab-trajectory')">
-                                    <div class="circuit-node-badge">STEP 04</div>
-                                    <div class="circuit-node-icon"><i class="fa-solid fa-route"></i></div>
-                                    <h5>Career Trajectory</h5>
-                                    <p>Multi-Tier Upskilling & Vector Discovery</p>
-                                    <div class="circuit-node-tag">Recommendations</div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Concentric Bullseye & Benchmark Deck -->
-                        <div class="glass-panel recommendation-bullseye-panel">
-                            <div class="panel-headline">
-                                <div class="headline-title">
-                                    <i class="fa-solid fa-bullseye text-blue"></i>
-                                    <div>
-                                        <h3>Recommendation Benchmarks</h3>
-                                        <p class="panel-subtitle">Empirical retrieval precision & ranking metrics</p>
-                                    </div>
-                                </div>
-                                <span class="badge badge-emerald">Verified A+</span>
-                            </div>
-
-                            <div class="bullseye-content-wrap">
-                                
-                                <!-- Visual Radial Ranking Hub -->
-                                <div class="bullseye-matrix-cards">
-                                    
-                                    <div class="bullseye-stat-card">
-                                        <div class="stat-card-left">
-                                            <div class="stat-circle-icon bg-blue-subtle"><i class="fa-solid fa-award text-blue"></i></div>
-                                            <div>
-                                                <span class="bullseye-label">Hit Rate @ 3</span>
-                                                <span class="bullseye-desc">Top 3 Candidates Rank Match</span>
-                                            </div>
-                                        </div>
-                                        <div class="bullseye-val text-blue" id="metric-rec-hit3">87.50%</div>
-                                    </div>
-
-                                    <div class="bullseye-stat-card">
-                                        <div class="stat-card-left">
-                                            <div class="stat-circle-icon bg-emerald-subtle"><i class="fa-solid fa-circle-check text-emerald"></i></div>
-                                            <div>
-                                                <span class="bullseye-label">Hit Rate @ 5</span>
-                                                <span class="bullseye-desc">Complete Top-5 Retrieval Coverage</span>
-                                            </div>
-                                        </div>
-                                        <div class="bullseye-val text-emerald" id="metric-rec-hit5">100.00%</div>
-                                    </div>
-
-                                    <div class="bullseye-stat-card">
-                                        <div class="stat-card-left">
-                                            <div class="stat-circle-icon bg-cyan-subtle"><i class="fa-solid fa-chart-line text-cyan"></i></div>
-                                            <div>
-                                                <span class="bullseye-label">Mean Reciprocal Rank (MRR)</span>
-                                                <span class="bullseye-desc">Rank Quality (1.0 = Perfect First-Rank)</span>
-                                            </div>
-                                        </div>
-                                        <div class="bullseye-val text-cyan" id="metric-rec-mrr">0.9000</div>
-                                    </div>
-
-                                </div>
-
-                                <div class="benchmark-footer-note">
-                                    <i class="fa-solid fa-shield-halved text-blue"></i>
-                                    <span>Evaluated across 2,400+ diverse resumes across 25 dynamic industry tracks with zero data leakage.</span>
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
                 </section>
 
 
                 <!-- =========================================================
-                     TAB 2: RESUME STUDIO & NER EXPLORER
+                     STEP 1: UPLOAD RESUME (PDF, DOCX, TXT)
                      ========================================================= -->
-                <section class="tab-pane" id="tab-analyzer">
+                <section class="tab-pane" id="tab-upload">
                     <div class="studio-two-col-layout">
-                        
-                        <!-- Left Panel: Input & Uploader -->
+                        <!-- Left: Upload Zone -->
                         <div class="glass-panel studio-panel-left">
                             <div class="panel-top-bar">
                                 <div class="panel-title-wrap">
-                                    <i class="fa-solid fa-file-lines text-blue"></i>
-                                    <h3>Candidate Resume Input</h3>
+                                    <i class="fa-solid fa-cloud-arrow-up text-blue"></i>
+                                    <h3>Step 1: Upload Candidate Resume</h3>
                                 </div>
                                 <div class="quick-sample-chips">
                                     <span class="chip-label">Quick Samples:</span>
                                     <button class="mini-sample-chip" onclick="loadSampleResume('dev')">Full Stack</button>
-                                    <button class="mini-sample-chip" onclick="loadSampleResume('ai')">AI / ML</button>
+                                    <button class="mini-sample-chip" onclick="loadSampleResume('ai')">AI/ML</button>
                                     <button class="mini-sample-chip" onclick="loadSampleResume('acct')">Audit/CPA</button>
                                     <button class="mini-sample-chip" onclick="loadSampleResume('hr')">HR Lead</button>
-                                    <button class="mini-sample-chip" onclick="loadSampleResume('cyber')">CyberSec</button>
                                 </div>
                             </div>
 
                             <!-- Drag & Drop Zone -->
                             <div class="file-drop-zone" id="resume-dropzone">
-                                <input type="file" id="resume-file-input" accept=".txt,.pdf,.docx,.doc,.md" class="hidden-file-input">
+                                <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc,.txt,.md" class="hidden-file-input">
                                 <div class="dropzone-content">
-                                    <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                                    <div class="drop-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
                                     <div class="drop-text">
-                                        <strong>Drag & drop resume file here</strong> or <span class="browse-link">browse files</span>
+                                        <strong>Drag & drop PDF or DOCX resume here</strong> or <span class="browse-link">browse files</span>
                                     </div>
-                                    <span class="drop-subtext">Supports PDF, DOCX, TXT, Markdown</span>
+                                    <span class="drop-subtext">Native backend binary parsing for .pdf, .docx, and .txt</span>
                                 </div>
                             </div>
 
-                            <!-- Textarea Editor -->
-                            <div class="editor-container">
+                            <div class="file-info-bar hidden" id="uploaded-file-meta-bar" style="display: none; margin-top: 12px; padding: 10px 14px; background: rgba(240, 253, 244, 0.9); border: 1px solid #86efac; border-radius: var(--radius-md);">
+                                <i class="fa-solid fa-file-circle-check text-emerald"></i>
+                                <span id="uploaded-file-name" style="font-weight: 700; color: #166534;">resume.pdf</span>
+                                <span id="uploaded-file-details" style="font-size: 12px; color: #15803d; margin-left: 8px;">(45 KB • 542 words)</span>
+                            </div>
+
+                            <!-- Text Editor -->
+                            <div class="editor-container" style="margin-top: 16px;">
                                 <div class="editor-header">
-                                    <span>Resume Text</span>
+                                    <span>Parsed Resume Content</span>
                                     <div class="editor-actions">
                                         <span id="resume-word-count" class="word-counter">0 words</span>
                                         <button class="btn-text-action" id="btn-clear-resume" title="Clear text">
@@ -506,121 +495,56 @@
                                         </button>
                                     </div>
                                 </div>
-                                <textarea id="analyzer-resume-input" class="modern-textarea" placeholder="Paste full resume text or drag a document above to begin analysis..."></textarea>
+                                <textarea id="analyzer-resume-input" class="modern-textarea" placeholder="Paste resume text or upload a PDF/DOCX document above to begin..."></textarea>
                             </div>
 
-                            <div class="studio-action-row">
-                                <button class="btn btn-primary btn-large" id="btn-run-analyzer">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span>Run Deep Analysis</span>
+                            <div class="step-navigation-footer">
+                                <span class="sub-hint"><i class="fa-solid fa-shield-halved"></i> Uploaded documents parsed securely</span>
+                                <button class="btn btn-primary btn-large" id="btn-goto-ner">
+                                    <span>Run Step 2: Extract Entities & NER</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Right Panel: Results & Interactive Entity Studio -->
-                        <div class="glass-panel studio-panel-right" id="analyzer-output-container">
-                            
-                            <!-- Empty State -->
-                            <div class="empty-state-view" id="analyzer-placeholder">
-                                <div class="empty-state-icon">
-                                    <i class="fa-solid fa-microchip"></i>
+                        <!-- Right: Ingestion Guide & Telemetry -->
+                        <div class="glass-panel studio-panel-right">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-circle-info text-blue"></i>
+                                    <div>
+                                        <h3>Resume Ingestion Engine</h3>
+                                        <p class="panel-subtitle">Multi-format parser with text normalization</p>
+                                    </div>
                                 </div>
-                                <h3>Resume Analysis Studio</h3>
-                                <p>Select a quick sample on the left or paste candidate text, then click <strong>"Run Deep Analysis"</strong> to extract entities and match career roles.</p>
+                                <span class="badge badge-emerald">Ready</span>
                             </div>
 
-                            <!-- Results View (Hidden by Default) -->
-                            <div class="analyzer-results-wrapper hidden" id="analyzer-results-wrapper">
-                                
-                                <!-- Top Classification & Health Metrics Banner -->
-                                <div class="analysis-summary-grid">
-                                    
-                                    <!-- Category Card -->
-                                    <div class="summary-card category-badge-card">
-                                        <div class="card-eyebrow">PREDICTED CATEGORY</div>
-                                        <div class="category-header">
-                                            <h2 id="analyzer-class-title">Software Developer</h2>
-                                            <span class="badge badge-blue" id="analyzer-subdomain-tag">Engineering</span>
-                                        </div>
-                                        <div class="category-alt-list" id="analyzer-alt-categories">
-                                            <!-- Dynamically filled with alternative classes -->
+                            <div class="sample-category-section" style="margin-top: 20px;">
+                                <h4>Supported Document Formats</h4>
+                                <div class="samples-cards-grid" style="grid-template-columns: 1fr;">
+                                    <div class="sample-pick-card">
+                                        <div class="pick-icon icon-rose"><i class="fa-solid fa-file-pdf"></i></div>
+                                        <div class="pick-content">
+                                            <h5>Adobe PDF (.pdf)</h5>
+                                            <p>Native layout extraction, multi-column reading, and whitespace reconstruction via PyPDF.</p>
                                         </div>
                                     </div>
-
-                                    <!-- Gauge Confidence Card -->
-                                    <div class="summary-card gauge-card">
-                                        <div class="gauge-center-content">
-                                            <svg viewBox="0 0 36 36" class="circular-svg">
-                                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                <path id="analyzer-class-circle" class="circle-fill stroke-blue" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                <text x="18" y="20.35" class="gauge-text" id="analyzer-class-percentage">0%</text>
-                                            </svg>
-                                            <span class="gauge-label">Confidence</span>
+                                    <div class="sample-pick-card">
+                                        <div class="pick-icon icon-blue"><i class="fa-solid fa-file-word"></i></div>
+                                        <div class="pick-content">
+                                            <h5>Microsoft Word (.docx)</h5>
+                                            <p>Full paragraph, table cell, and bullet list extraction via python-docx parser.</p>
                                         </div>
                                     </div>
-
-                                    <!-- ATS Health Score -->
-                                    <div class="summary-card ats-score-card">
-                                        <div class="card-eyebrow">ATS READABILITY SCORE</div>
-                                        <div class="ats-big-score" id="analyzer-ats-score">94<span class="out-of">/100</span></div>
-                                        <div class="ats-breakdown-bars">
-                                            <div class="ats-mini-bar">
-                                                <span>Structure & Format</span>
-                                                <div class="mini-bar-track"><div class="mini-bar-fill bg-emerald" style="width: 95%"></div></div>
-                                            </div>
-                                            <div class="ats-mini-bar">
-                                                <span>Skill Keyword Density</span>
-                                                <div class="mini-bar-track"><div class="mini-bar-fill bg-cyan" style="width: 92%"></div></div>
-                                            </div>
+                                    <div class="sample-pick-card">
+                                        <div class="pick-icon icon-cyan"><i class="fa-solid fa-file-code"></i></div>
+                                        <div class="pick-content">
+                                            <h5>Plain Text & Markdown (.txt, .md)</h5>
+                                            <p>Direct UTF-8 stream ingestion with zero formatting overhead.</p>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- NER Entity Highlighting Studio -->
-                                <div class="result-section-box">
-                                    <div class="section-box-header">
-                                        <div class="header-left-title">
-                                            <i class="fa-solid fa-signature text-blue"></i>
-                                            <h4>Extracted Named Entities (NER)</h4>
-                                        </div>
-                                        <span class="section-tag-counter" id="ner-entity-count">12 Entities Identified</span>
-                                    </div>
-                                    
-                                    <!-- Interactive Entity Legend / Filters -->
-                                    <div class="entity-filter-bar">
-                                        <span class="filter-instruction">Filter:</span>
-                                        <button class="entity-filter-btn active" data-entity="all">ALL</button>
-                                        <button class="entity-filter-btn ent-name" data-entity="name"><i class="fa-solid fa-user"></i> Name</button>
-                                        <button class="entity-filter-btn ent-email" data-entity="email"><i class="fa-solid fa-envelope"></i> Email</button>
-                                        <button class="entity-filter-btn ent-degree" data-entity="degree"><i class="fa-solid fa-graduation-cap"></i> Degree</button>
-                                        <button class="entity-filter-btn ent-college" data-entity="college_name"><i class="fa-solid fa-building-columns"></i> College</button>
-                                        <button class="entity-filter-btn ent-designation" data-entity="designation"><i class="fa-solid fa-briefcase"></i> Role</button>
-                                        <button class="entity-filter-btn ent-skills" data-entity="skills"><i class="fa-solid fa-code"></i> Skills</button>
-                                        <button class="entity-filter-btn ent-experience" data-entity="experience"><i class="fa-solid fa-clock"></i> Exp</button>
-                                        <button class="entity-filter-btn ent-location" data-entity="location"><i class="fa-solid fa-location-dot"></i> Location</button>
-                                    </div>
-
-                                    <!-- Rendered Annotated Text -->
-                                    <div class="ner-text-display-box" id="analyzer-ner-text">
-                                        <!-- Highlighted tokens dynamically injected -->
-                                    </div>
-                                </div>
-
-                                <!-- Career Recommendations & Skill Gap Matrix -->
-                                <div class="result-section-box">
-                                    <div class="section-box-header">
-                                        <div class="header-left-title">
-                                            <i class="fa-solid fa-compass text-emerald"></i>
-                                            <h4>Compatible Career Trajectories & Skill Gaps</h4>
-                                        </div>
-                                        <span class="badge badge-emerald">Top Role Matches</span>
-                                    </div>
-
-                                    <div class="recommendations-container" id="analyzer-recs-list">
-                                        <!-- Career Role Cards Dynamically Rendered -->
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -628,159 +552,459 @@
 
 
                 <!-- =========================================================
-                     TAB 3: JOB MATCHER & FITMENT ENGINE
+                     STEP 2: RESUME PROCESSING & NER
                      ========================================================= -->
-                <section class="tab-pane" id="tab-matcher">
+                <section class="tab-pane" id="tab-ner">
+                    <div class="studio-two-col-layout">
+                        <div class="glass-panel studio-panel-left" style="flex: 1.4;">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-tags text-cyan"></i>
+                                    <div>
+                                        <h3>Step 2: Structured Entity Extraction (NER)</h3>
+                                        <p class="panel-subtitle">Fine-tuned Transformer token classification across 6 core candidate pillars</p>
+                                    </div>
+                                </div>
+                                <span class="badge badge-cyan" id="ner-entity-count-badge">Processing Ready</span>
+                            </div>
+
+                            <!-- Top Classification Badge -->
+                            <div class="summary-card category-badge-card" style="margin-top: 14px;">
+                                <div class="card-eyebrow">PREDICTED PROFESSIONAL DOMAIN</div>
+                                <div class="category-header">
+                                    <h2 id="ner-predicted-role">Software Developer</h2>
+                                    <span class="badge badge-blue" id="ner-role-confidence">94% Confidence</span>
+                                </div>
+                            </div>
+
+                            <!-- 6 Structured Pillar Cards -->
+                            <div class="structured-ner-grid">
+                                <!-- Pillar 1: Skills -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-code text-blue"></i> Technical & Domain Skills</div>
+                                        <span class="badge badge-blue" id="ner-skills-count">0 Detected</span>
+                                    </div>
+                                    <div class="ner-item-tags-wrap" id="ner-skills-container">
+                                        <span class="ner-pill-badge">Python</span>
+                                        <span class="ner-pill-badge">Docker</span>
+                                        <span class="ner-pill-badge">AWS</span>
+                                    </div>
+                                </div>
+
+                                <!-- Pillar 2: Education -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-graduation-cap text-emerald"></i> Education & Degrees</div>
+                                    </div>
+                                    <ul class="ner-list-items" id="ner-education-container">
+                                        <li><i class="fa-solid fa-circle-check"></i> B.S. in Computer Science</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Pillar 3: Experience -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-briefcase text-cyan"></i> Experience & Roles</div>
+                                        <span class="badge badge-cyan" id="ner-exp-years">6+ Years</span>
+                                    </div>
+                                    <ul class="ner-list-items" id="ner-experience-container">
+                                        <li><i class="fa-solid fa-briefcase"></i> Senior Full Stack Engineer</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Pillar 4: Projects -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-diagram-project text-amber"></i> Key Projects</div>
+                                    </div>
+                                    <ul class="ner-list-items" id="ner-projects-container">
+                                        <li><i class="fa-solid fa-code-branch"></i> Distributed Cloud Architecture</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Pillar 5: Certifications -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-award text-rose"></i> Certifications</div>
+                                    </div>
+                                    <ul class="ner-list-items" id="ner-certs-container">
+                                        <li><i class="fa-solid fa-certificate"></i> AWS Certified Solutions Architect</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Pillar 6: Contact & Identity -->
+                                <div class="ner-category-card">
+                                    <div class="ner-cat-header">
+                                        <div class="ner-cat-title"><i class="fa-solid fa-id-card text-blue"></i> Candidate Profile</div>
+                                    </div>
+                                    <ul class="ner-list-items" id="ner-contact-container">
+                                        <li id="ner-cand-name"><i class="fa-solid fa-user"></i> Alex Rivera</li>
+                                        <li id="ner-cand-email"><i class="fa-solid fa-envelope"></i> alex.rivera@example.com</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="step-navigation-footer">
+                                <button class="btn btn-outline" onclick="switchToTab('tab-upload')">
+                                    <i class="fa-solid fa-arrow-left"></i> Back to Upload
+                                </button>
+                                <button class="btn btn-primary btn-large" id="btn-goto-ats">
+                                    <span>Proceed to Step 3: Run ATS Evaluation</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right: Annotated Token Explorer -->
+                        <div class="glass-panel studio-panel-right">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-highlighter text-blue"></i>
+                                    <div>
+                                        <h4>Token-Level Entity Highlights</h4>
+                                        <p class="panel-subtitle">Direct Transformer output annotations</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ner-text-display-box" id="analyzer-ner-text" style="max-height: 520px; overflow-y: auto;">
+                                <!-- Highlighted tokens injected dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     STEP 3: RESUME ANALYSIS & ATS EVALUATION
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-ats">
+                    <div class="studio-two-col-layout">
+                        <div class="glass-panel studio-panel-left" style="flex: 1.5;">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-shield-halved text-emerald"></i>
+                                    <div>
+                                        <h3>Step 3: Resume Analysis & ATS Compatibility</h3>
+                                        <p class="panel-subtitle">Structural completeness, measurable outcomes, and recruiter keyword density</p>
+                                    </div>
+                                </div>
+                                <span class="badge badge-emerald" id="ats-verdict-pill">ATS Ready</span>
+                            </div>
+
+                            <!-- Master ATS Score Card -->
+                            <div class="analysis-summary-grid" style="margin-top: 16px;">
+                                <div class="summary-card ats-score-card">
+                                    <div class="card-eyebrow">ATS COMPATIBILITY INDEX</div>
+                                    <div class="ats-big-score" id="ats-master-score">94<span class="out-of">/100</span></div>
+                                    <div class="ats-breakdown-bars">
+                                        <div class="ats-mini-bar">
+                                            <span>Formatting & Sections</span>
+                                            <div class="mini-bar-track"><div class="mini-bar-fill bg-emerald" id="ats-bar-format" style="width: 95%"></div></div>
+                                        </div>
+                                        <div class="ats-mini-bar">
+                                            <span>Keyword Density</span>
+                                            <div class="mini-bar-track"><div class="mini-bar-fill bg-cyan" id="ats-bar-keyword" style="width: 90%"></div></div>
+                                        </div>
+                                        <div class="ats-mini-bar">
+                                            <span>Quantifiable Impact</span>
+                                            <div class="mini-bar-track"><div class="mini-bar-fill bg-blue" id="ats-bar-impact" style="width: 92%"></div></div>
+                                        </div>
+                                        <div class="ats-mini-bar">
+                                            <span>Length & Readability</span>
+                                            <div class="mini-bar-track"><div class="mini-bar-fill bg-amber" id="ats-bar-readability" style="width: 95%"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="summary-card gauge-card">
+                                    <div class="gauge-center-content">
+                                        <svg viewBox="0 0 36 36" class="circular-svg">
+                                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <path id="ats-circle-fill" class="circle-fill stroke-emerald" stroke-dasharray="94, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <text x="18" y="20.35" class="gauge-text" id="ats-percentage-text">94%</text>
+                                        </svg>
+                                        <span class="gauge-label">Pass Probability</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Strengths & Weaknesses Breakdown -->
+                            <div class="ats-audit-grid">
+                                <div class="ats-strengths-box">
+                                    <div class="ats-box-header">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        <span>Verified Resume Strengths</span>
+                                    </div>
+                                    <ul class="ats-feedback-list" id="ats-strengths-list">
+                                        <li><i class="fa-solid fa-check text-emerald"></i> High Quantifiable Impact: Employs metrics, percentages, and performance results.</li>
+                                        <li><i class="fa-solid fa-check text-emerald"></i> Rich Technical Breadth: Features 8+ indexed domain skills.</li>
+                                        <li><i class="fa-solid fa-check text-emerald"></i> Standard Typography: Parseable headers and clean bullet formatting.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="ats-weaknesses-box">
+                                    <div class="ats-box-header">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <span>Improvement Gaps & Red Flags</span>
+                                    </div>
+                                    <ul class="ats-feedback-list" id="ats-weaknesses-list">
+                                        <li><i class="fa-solid fa-arrow-trend-up text-amber"></i> Action Verb Enhancement: Upgrade opening bullet verbs with dynamic past-tense action words.</li>
+                                        <li><i class="fa-solid fa-arrow-trend-up text-amber"></i> Target Job Alignment: Tailor keywords to the specific job description requirements.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="step-navigation-footer">
+                                <button class="btn btn-outline" onclick="switchToTab('tab-ner')">
+                                    <i class="fa-solid fa-arrow-left"></i> Back to NER
+                                </button>
+                                <button class="btn btn-primary btn-large" id="btn-goto-optimize">
+                                    <span>Proceed to Step 4: Optimize Resume</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right: Recruiter Tips -->
+                        <div class="glass-panel studio-panel-right">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-bullseye text-blue"></i>
+                                    <div>
+                                        <h4>ATS Screening Rubric</h4>
+                                        <p class="panel-subtitle">Standards across enterprise ATS engines</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+                                <div class="sample-pick-card">
+                                    <div class="pick-icon icon-emerald"><i class="fa-solid fa-check-double"></i></div>
+                                    <div class="pick-content">
+                                        <h5>Standard Section Headings</h5>
+                                        <p>Standard sections like "Experience" and "Education" ensure 99% parse accuracy across Workday, Taleo, and Greenhouse.</p>
+                                    </div>
+                                </div>
+                                <div class="sample-pick-card">
+                                    <div class="pick-icon icon-cyan"><i class="fa-solid fa-chart-line"></i></div>
+                                    <div class="pick-content">
+                                        <h5>Metrics & Outcome Anchoring</h5>
+                                        <p>Bullets with quantitative figures (e.g. "reduced latency by 40%") rank in the top 5% of candidate scores.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     STEP 4: RESUME OPTIMIZATION
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-optimize">
+                    <div class="optimize-grid-layout">
+                        <!-- Left: Target Job & Generator Control -->
+                        <div class="glass-panel">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-amber"></i>
+                                    <div>
+                                        <h3>Step 4: Resume Optimization Engine</h3>
+                                        <p class="panel-subtitle">Generate an improved resume tailored to the target job opening</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="guardrail-pill" style="margin: 12px 0;">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>Zero-Hallucination Policy: Will not invent fake qualifications or degrees</span>
+                            </div>
+
+                            <div class="input-block" style="margin-top: 14px;">
+                                <label for="opt-job-selector"><i class="fa-solid fa-briefcase"></i> Select Target Job Opening:</label>
+                                <select id="opt-job-selector" class="modern-select" style="margin-bottom: 12px;">
+                                    <option value="dev">Senior Full Stack / Backend Engineer (Python, React, AWS, Docker)</option>
+                                    <option value="ai">AI / Machine Learning Engineer (PyTorch, SBERT, Transformers)</option>
+                                    <option value="cloud">Principal Cloud & DevOps Architect (Kubernetes, Terraform, AWS)</option>
+                                    <option value="acct">Corporate Audit Manager / CPA (SOX, GAAP, Financial Reporting)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-block">
+                                <label for="opt-job-description"><i class="fa-solid fa-file-lines"></i> Target Job Description:</label>
+                                <textarea id="opt-job-description" class="modern-textarea medium" placeholder="Paste target job opening text..."></textarea>
+                            </div>
+
+                            <div style="margin-top: 16px;">
+                                <button class="btn btn-primary btn-large" id="btn-run-optimization" style="width: 100%;">
+                                    <i class="fa-solid fa-wand-sparkles"></i>
+                                    <span>Generate Tailored Optimized Resume</span>
+                                </button>
+                            </div>
+
+                            <div class="step-navigation-footer" style="margin-top: 24px;">
+                                <button class="btn btn-outline" onclick="switchToTab('tab-ats')">
+                                    <i class="fa-solid fa-arrow-left"></i> Back to ATS
+                                </button>
+                                <button class="btn btn-primary" id="btn-goto-matching">
+                                    <span>Step 5: Role Match & Recs</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right: Optimized Resume Output & DOCX Download -->
+                        <div class="glass-panel">
+                            <div class="panel-headline">
+                                <div class="headline-title">
+                                    <i class="fa-solid fa-file-lines text-emerald"></i>
+                                    <div>
+                                        <h4>Optimized Resume Preview</h4>
+                                        <p class="panel-subtitle">Enhanced action verbs and keyword alignment</p>
+                                    </div>
+                                </div>
+                                <a id="btn-download-docx" href="/api/download-optimized-docx" class="btn btn-emerald" style="text-decoration: none;" download>
+                                    <i class="fa-solid fa-file-word"></i> Download .DOCX
+                                </a>
+                            </div>
+
+                            <div class="optimized-resume-paper" id="optimized-resume-view">
+                                <h1 id="opt-cand-header">Alex Rivera</h1>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Senior Full Stack Software Engineer • alex.rivera@example.com • San Francisco, CA</p>
+                                
+                                <h3>Professional Summary</h3>
+                                <p id="opt-summary-text">Accomplished Senior Full Stack Software Engineer with 6+ years of expertise designing scalable distributed systems using Python, React, Docker, and AWS. Proven track record of improving latency by 35% and orchestrating high-availability microservices.</p>
+
+                                <h3>Core Competencies & Keywords</h3>
+                                <p id="opt-skills-text">Python, React, TypeScript, FastAPI, Docker, Kubernetes, AWS, PostgreSQL, Redis, Microservices, CI/CD, Git</p>
+
+                                <h3>Tailored Professional Experience</h3>
+                                <ul id="opt-bullets-list" style="padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                                    <li>Architected high-throughput microservices using FastAPI and Redis, reducing response latency by 35%.</li>
+                                    <li>Spearheaded containerization with Docker and Kubernetes on AWS EKS, improving deployment frequency by 4x.</li>
+                                    <li>Engineered automated CI/CD pipelines ensuring 99.9% deployment reliability.</li>
+                                </ul>
+
+                                <h3>Education & Certifications</h3>
+                                <p id="opt-edu-text">B.S. in Computer Science • University of California<br>AWS Certified Solutions Architect</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     STEP 5: CAREER RECOMMENDATION (5A) & JOB MATCHING (5B)
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-matching">
                     <div class="matcher-grid-layout">
-                        
-                        <!-- Left: Input Dual Panels -->
+                        <!-- Left: Input Profiles -->
                         <div class="glass-panel matcher-inputs-panel">
                             <div class="panel-headline">
                                 <div class="headline-title">
                                     <i class="fa-solid fa-arrows-split-up-and-left text-blue"></i>
-                                    <h3>Candidate & Job Profile</h3>
-                                </div>
-                                <div class="quick-preset-actions">
-                                    <button class="mini-sample-chip" onclick="loadMatcherPreset('fullstack')">Full-Stack</button>
-                                    <button class="mini-sample-chip" onclick="loadMatcherPreset('datascience')">Data Science</button>
-                                    <button class="mini-sample-chip" onclick="loadMatcherPreset('cpa')">Audit/CPA</button>
+                                    <div>
+                                        <h3>Step 5: Career Recommendation & Job Matching</h3>
+                                        <p class="panel-subtitle">5A: Career Trajectories & Missing Skills • 5B: SBERT + XGBoost Fitment Scoring</p>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="matcher-input-row">
                                 <div class="input-block">
-                                    <div class="input-block-header">
-                                        <label for="matcher-resume-input"><i class="fa-solid fa-user-tie"></i> Candidate Resume</label>
-                                    </div>
-                                    <textarea id="matcher-resume-input" class="modern-textarea medium" placeholder="Paste candidate's resume text..."></textarea>
+                                    <label for="matcher-resume-input"><i class="fa-solid fa-user-tie"></i> Candidate Resume Profile</label>
+                                    <textarea id="matcher-resume-input" class="modern-textarea medium" placeholder="Paste candidate profile..."></textarea>
                                 </div>
-
                                 <div class="input-block">
-                                    <div class="input-block-header">
-                                        <label for="matcher-job-input"><i class="fa-solid fa-briefcase"></i> Target Job Description</label>
-                                    </div>
-                                    <textarea id="matcher-job-input" class="modern-textarea medium" placeholder="Paste target job opening requirements..."></textarea>
+                                    <label for="matcher-job-input"><i class="fa-solid fa-briefcase"></i> Target Job Opening</label>
+                                    <textarea id="matcher-job-input" class="modern-textarea medium" placeholder="Paste target job opening..."></textarea>
                                 </div>
                             </div>
 
                             <div class="skills-tag-editor-block">
-                                <div class="input-block-header">
-                                    <label for="matcher-skills-input"><i class="fa-solid fa-list-check"></i> Required Skills Tags</label>
-                                    <span class="sub-hint">Type a skill & press Enter</span>
-                                </div>
+                                <label><i class="fa-solid fa-list-check"></i> Required Skills Filter</label>
                                 <div class="tag-chips-input-container" id="matcher-skills-tag-container">
-                                    <!-- Dynamic Tag Pills -->
                                     <input type="text" id="matcher-skills-new-input" placeholder="Add skill..." class="tag-inline-input">
                                 </div>
-                                <input type="hidden" id="matcher-skills-input" value='["Python", "Java", "Docker", "Kubernetes", "Microservices"]'>
+                                <input type="hidden" id="matcher-skills-input" value='["Python", "Docker", "AWS", "Kubernetes", "Microservices"]'>
                             </div>
 
                             <div class="matcher-submit-row">
                                 <button class="btn btn-primary btn-large" id="btn-run-matcher">
                                     <i class="fa-solid fa-bolt"></i>
-                                    <span>Evaluate Fitment Match</span>
+                                    <span>Run 5A/5B Fitment Evaluation</span>
+                                </button>
+                            </div>
+
+                            <div class="step-navigation-footer" style="margin-top: 24px;">
+                                <button class="btn btn-outline" onclick="switchToTab('tab-optimize')">
+                                    <i class="fa-solid fa-arrow-left"></i> Back to Optimizer
+                                </button>
+                                <button class="btn btn-primary" id="btn-goto-interview">
+                                    <span>Proceed to Step 6: AI Voice Interview</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Right: Fitment Breakdown & AI Hiring Insights -->
-                        <div class="glass-panel matcher-output-panel" id="matcher-output-container">
-                            
-                            <!-- Placeholder -->
-                            <div class="empty-state-view" id="matcher-placeholder">
-                                <div class="empty-state-icon">
-                                    <i class="fa-solid fa-scale-balanced"></i>
+                        <!-- Right: Fitment Breakdown & AI Insights -->
+                        <div class="glass-panel matcher-output-panel">
+                            <!-- 5B Fitment Card -->
+                            <div class="fitment-hero-card" id="match-status-card">
+                                <div class="fitment-left-badge-group">
+                                    <div class="fitment-verdict-tag" id="match-status-badge">HIGH FITMENT MATCH</div>
+                                    <h3 id="match-verdict-title">Strong Candidate Match</h3>
+                                    <p id="match-verdict-desc">Candidate demonstrates strong overlap in core backend frameworks, cloud containerization, and distributed architecture.</p>
                                 </div>
-                                <h3>Job Fitment Engine</h3>
-                                <p>Load candidate and job description on the left, then click <strong>"Evaluate Fitment Match"</strong> to compute alignment probabilities and skill coverage.</p>
+                                <div class="fitment-radial-wrap">
+                                    <svg viewBox="0 0 36 36" class="circular-svg big-gauge">
+                                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path id="match-probability-circle" class="circle-fill stroke-emerald" stroke-dasharray="91, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <text x="18" y="20.35" class="gauge-text" id="match-probability-text">91%</text>
+                                    </svg>
+                                    <span class="gauge-label">Fitment Probability</span>
+                                </div>
                             </div>
 
-                            <!-- Results View -->
-                            <div class="matcher-results-wrapper hidden" id="matcher-results-wrapper">
-                                
-                                <!-- Status Banner & Master Score -->
-                                <div class="fitment-hero-card" id="match-status-card">
-                                    <div class="fitment-left-badge-group">
-                                        <div class="fitment-verdict-tag" id="match-status-badge">HIGH FITMENT MATCH</div>
-                                        <h3 id="match-verdict-title">Strong Candidate Match</h3>
-                                        <p id="match-verdict-desc">Candidate demonstrates strong overlap in core backend frameworks, cloud containerization, and distributed architecture.</p>
-                                    </div>
-                                    <div class="fitment-radial-wrap">
-                                        <svg viewBox="0 0 36 36" class="circular-svg big-gauge">
-                                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                            <path id="match-probability-circle" class="circle-fill stroke-emerald" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                            <text x="18" y="20.35" class="gauge-text" id="match-probability-text">0%</text>
-                                        </svg>
-                                        <span class="gauge-label">Fitment Score</span>
+                            <!-- Skills Overlap & Missing Gaps -->
+                            <div class="result-section-box" style="margin-top: 18px;">
+                                <div class="section-box-header">
+                                    <div class="header-left-title">
+                                        <i class="fa-solid fa-circle-nodes text-cyan"></i>
+                                        <h4>Skill Overlap & Gap Matrix</h4>
                                     </div>
                                 </div>
-
-                                <!-- Competency Matrix Breakdown -->
-                                <div class="result-section-box">
-                                    <div class="section-box-header">
-                                        <div class="header-left-title">
-                                            <i class="fa-solid fa-chart-simple text-blue"></i>
-                                            <h4>Competency Alignment</h4>
+                                <div class="skills-overlap-two-col">
+                                    <div class="overlap-col matched-col">
+                                        <div class="col-title"><i class="fa-solid fa-circle-check text-emerald"></i> Matched Skills (Covered)</div>
+                                        <div class="skills-tag-wrap" id="match-covered-skills-list">
+                                            <span class="skill-tag tag-matched">Python</span>
+                                            <span class="skill-tag tag-matched">Docker</span>
+                                            <span class="skill-tag tag-matched">AWS</span>
                                         </div>
                                     </div>
-                                    <div class="competency-bars-grid">
-                                        <div class="comp-bar-item">
-                                            <div class="comp-label"><span>Technical Overlap</span><strong id="comp-tech-val">92%</strong></div>
-                                            <div class="comp-track"><div class="comp-fill bg-blue" id="comp-tech-fill" style="width: 92%"></div></div>
-                                        </div>
-                                        <div class="comp-bar-item">
-                                            <div class="comp-label"><span>Domain Alignment</span><strong id="comp-domain-val">88%</strong></div>
-                                            <div class="comp-track"><div class="comp-fill bg-cyan" id="comp-domain-fill" style="width: 88%"></div></div>
-                                        </div>
-                                        <div class="comp-bar-item">
-                                            <div class="comp-label"><span>Cloud & Tools</span><strong id="comp-cloud-val">85%</strong></div>
-                                            <div class="comp-track"><div class="comp-fill bg-emerald" id="comp-cloud-fill" style="width: 85%"></div></div>
-                                        </div>
-                                        <div class="comp-bar-item">
-                                            <div class="comp-label"><span>Semantic Relevance</span><strong id="comp-sbert-val">90%</strong></div>
-                                            <div class="comp-track"><div class="comp-fill bg-amber" id="comp-sbert-fill" style="width: 90%"></div></div>
+                                    <div class="overlap-col missing-col">
+                                        <div class="col-title"><i class="fa-solid fa-triangle-exclamation text-amber"></i> Missing Skills (To Probe in Interview)</div>
+                                        <div class="skills-tag-wrap" id="match-missing-skills-list">
+                                            <span class="skill-tag tag-missing">Kubernetes</span>
+                                            <span class="skill-tag tag-missing">GraphQL</span>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Skills Overlap Tags -->
-                                <div class="result-section-box">
-                                    <div class="section-box-header">
-                                        <div class="header-left-title">
-                                            <i class="fa-solid fa-circle-nodes text-cyan"></i>
-                                            <h4>Required Skills Overlap</h4>
-                                        </div>
-                                    </div>
-                                    <div class="skills-overlap-two-col">
-                                        <div class="overlap-col matched-col">
-                                            <div class="col-title"><i class="fa-solid fa-check-circle text-emerald"></i> Matched Skills</div>
-                                            <div class="skills-tag-wrap" id="match-skills-list">
-                                                <!-- Dynamic Matched Tags -->
-                                            </div>
-                                        </div>
-                                        <div class="overlap-col missing-col">
-                                            <div class="col-title"><i class="fa-solid fa-triangle-exclamation text-amber"></i> Missing Skills</div>
-                                            <div class="skills-tag-wrap" id="match-missing-skills-list">
-                                                <!-- Dynamic Missing Tags -->
-                                            </div>
-                                        </div>
+                            <!-- 5A Career Recommendations -->
+                            <div class="result-section-box" style="margin-top: 18px;">
+                                <div class="section-box-header">
+                                    <div class="header-left-title">
+                                        <i class="fa-solid fa-compass text-emerald"></i>
+                                        <h4>5A: Recommended Career Trajectories</h4>
                                     </div>
                                 </div>
-
-                                <!-- AI Interview Assistant & Gap Questions -->
-                                <div class="result-section-box interview-box">
-                                    <div class="section-box-header">
-                                        <div class="header-left-title">
-                                            <i class="fa-solid fa-comments text-amber"></i>
-                                            <h4>Tailored Interview Questions (Gap Verification)</h4>
-                                        </div>
-                                        <span class="badge badge-amber">AI Generated</span>
-                                    </div>
-                                    <div class="interview-questions-list" id="match-interview-questions">
-                                        <!-- Dynamic Interview Questions -->
-                                    </div>
+                                <div class="recommendations-container" id="analyzer-recs-list">
+                                    <!-- Dynamic role cards -->
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -788,74 +1012,311 @@
 
 
                 <!-- =========================================================
-                     TAB 4: SEMANTIC JOB SEARCH
+                     STEP 6: PERSONALIZED AI VOICE INTERVIEW
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-interview">
+                    <div class="voice-studio-card">
+                        <div class="interviewer-persona-row">
+                            <div class="interviewer-profile">
+                                <div class="interviewer-avatar">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 2px;">Career IQ Voice Interviewer</h3>
+                                    <p style="font-size: 13px; color: var(--text-muted);" id="interview-role-subtitle">Conducting Interview for Senior Full Stack Engineer</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="voice-audio-equalizer" id="voice-equalizer">
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                    <div class="eq-bar"></div>
+                                </div>
+                                <span class="badge badge-rose"><i class="fa-solid fa-microphone-lines"></i> Interactive Voice Session</span>
+                            </div>
+                        </div>
+
+                        <!-- Current Question Box -->
+                        <div class="voice-question-box">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <span class="badge badge-blue" id="interview-q-category">Core Technical Architecture</span>
+                                <span style="font-size: 12px; color: var(--text-muted);" id="interview-q-index">Question 1 of 4</span>
+                            </div>
+
+                            <p class="voice-question-text" id="interview-question-display">
+                                Can you walk me through the architecture of a high-impact production system where you utilized Python and microservices, and how you handled latency and scale?
+                            </p>
+
+                            <div class="voice-playback-actions">
+                                <button class="btn btn-primary" id="btn-speak-question">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                    <span>Speak Question (AI Voice)</span>
+                                </button>
+                                <button class="btn btn-outline" id="btn-stop-speech">
+                                    <i class="fa-solid fa-pause"></i>
+                                    <span>Pause</span>
+                                </button>
+                                <button class="btn btn-glass" id="btn-next-question">
+                                    <i class="fa-solid fa-forward-step"></i>
+                                    <span>Next Question</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Candidate Microphone & Speech-To-Text Stage -->
+                        <div class="mic-recording-stage">
+                            <button class="mic-toggle-btn" id="btn-toggle-mic" title="Click to speak your answer">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                            <span class="mic-status-label" id="mic-status-text">Click microphone to speak your answer via Speech-To-Text</span>
+                            <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Powered by browser Web Speech Recognition • Real-time transcription</span>
+                        </div>
+
+                        <!-- Candidate Spoken Answer Transcript -->
+                        <div class="editor-container">
+                            <div class="editor-header">
+                                <span>Candidate Spoken Answer (Transcribed)</span>
+                                <span class="word-counter" id="answer-word-count">0 words</span>
+                            </div>
+                            <textarea id="interview-candidate-answer" class="modern-textarea medium" placeholder="Speak your answer using the microphone above, or type your response here..."></textarea>
+                        </div>
+
+                        <div class="step-navigation-footer">
+                            <button class="btn btn-outline" onclick="switchToTab('tab-matching')">
+                                <i class="fa-solid fa-arrow-left"></i> Back to Role Match
+                            </button>
+                            <button class="btn btn-primary btn-large" id="btn-goto-evaluation">
+                                <span>Proceed to Step 7: Evaluate AI Answer</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     STEP 7: AI ANSWER EVALUATION
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-evaluation">
+                    <div class="voice-studio-card">
+                        <div class="panel-headline" style="margin-bottom: 20px;">
+                            <div class="headline-title">
+                                <i class="fa-solid fa-brain text-cyan"></i>
+                                <div>
+                                    <h3>Step 7: AI Answer Evaluation & Rubric</h3>
+                                    <p class="panel-subtitle">Technical correctness, relevance, completeness, and communication telemetry</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="btn-run-answer-eval">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Re-Evaluate Answer</span>
+                            </button>
+                        </div>
+
+                        <!-- 4 Stat Metric Cards -->
+                        <div class="eval-score-hero-row">
+                            <div class="eval-metric-stat-card">
+                                <div class="eval-stat-label">Technical Correctness</div>
+                                <div class="eval-stat-number text-blue" id="eval-tech-score">92%</div>
+                                <span style="font-size: 11px; color: var(--text-muted);">Architecture depth</span>
+                            </div>
+
+                            <div class="eval-metric-stat-card">
+                                <div class="eval-stat-label">Relevance to Prompt</div>
+                                <div class="eval-stat-number text-cyan" id="eval-relevance-score">88%</div>
+                                <span style="font-size: 11px; color: var(--text-muted);">Target competency match</span>
+                            </div>
+
+                            <div class="eval-metric-stat-card">
+                                <div class="eval-stat-label">Completeness</div>
+                                <div class="eval-stat-number text-emerald" id="eval-completeness-score">85%</div>
+                                <span style="font-size: 11px; color: var(--text-muted);">Problem-solving scope</span>
+                            </div>
+
+                            <div class="eval-metric-stat-card">
+                                <div class="eval-stat-label">Communication Clarity</div>
+                                <div class="eval-stat-number text-amber" id="eval-clarity-score">90%</div>
+                                <span style="font-size: 11px; color: var(--text-muted);" id="eval-filler-label">0 filler words detected</span>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Explanation Box -->
+                        <div class="ats-strengths-box" style="margin-bottom: 20px;">
+                            <div class="ats-box-header">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>AI Evaluator Feedback</span>
+                            </div>
+                            <p id="eval-feedback-text" style="font-size: 14px; line-height: 1.6; color: #166534;">
+                                Strong demonstration of system design principles. The response effectively highlighted trade-offs between latency and throughput while utilizing Redis caching. Communication clarity was high with minimal filler words.
+                            </p>
+                        </div>
+
+                        <!-- Dynamic Follow-Up Question Probing Box -->
+                        <div class="follow-up-box">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i class="fa-solid fa-comments text-blue"></i>
+                                <strong style="color: var(--color-primary); font-size: 15px;">Smart Follow-Up Probing Question:</strong>
+                            </div>
+                            <p id="eval-followup-text" style="font-size: 15px; color: var(--text-primary); font-weight: 600; margin-bottom: 14px;">
+                                Building on your point regarding caching, what specific cache invalidation strategies did you implement to prevent stale data during burst traffic?
+                            </p>
+                            <button class="btn btn-outline" onclick="switchToTab('tab-interview')">
+                                <i class="fa-solid fa-reply"></i>
+                                <span>Answer Follow-Up in Voice Interview</span>
+                            </button>
+                        </div>
+
+                        <div class="step-navigation-footer">
+                            <button class="btn btn-outline" onclick="switchToTab('tab-interview')">
+                                <i class="fa-solid fa-arrow-left"></i> Back to Interview
+                            </button>
+                            <button class="btn btn-primary btn-large" id="btn-goto-report">
+                                <span>Proceed to Step 8: Final Career Readiness Report</span>
+                                <i class="fa-solid fa-award"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     STEP 8: FINAL CAREER READINESS REPORT
+                     ========================================================= -->
+                <section class="tab-pane" id="tab-report">
+                    <div class="glass-panel" style="padding: 28px;" id="printable-report-content">
+                        <!-- Readiness Hero Scorecard -->
+                        <div class="readiness-report-hero">
+                            <div>
+                                <span class="badge badge-emerald" id="report-tier-badge" style="margin-bottom: 10px;">ELITE CANDIDATE</span>
+                                <h2 style="font-size: 26px; color: var(--text-primary); margin-bottom: 6px;">Career Readiness Audit Report</h2>
+                                <p style="font-size: 14px; color: var(--text-muted);" id="report-meta-subtitle">Candidate: Alex Rivera • Target Role: Senior Full Stack Engineer</p>
+                                <p id="report-verdict-text" style="font-size: 15px; font-weight: 700; color: var(--color-primary); margin-top: 10px;">
+                                    Tier-1 Ready • Highly Recommended for Immediate Hire
+                                </p>
+                            </div>
+
+                            <div class="readiness-score-dial" id="readiness-dial" style="--readiness-val: 89;">
+                                <div class="readiness-score-inner">
+                                    <strong id="report-final-score">89</strong>
+                                    <span>READINESS INDEX</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4 Breakdown Metric Rows -->
+                        <div class="competency-bars-grid" style="margin-bottom: 24px;">
+                            <div class="comp-bar-item">
+                                <div class="comp-label"><span>1. Resume & ATS Quality</span><strong id="report-sub-ats">94%</strong></div>
+                                <div class="comp-track"><div class="comp-fill bg-emerald" id="report-sub-ats-fill" style="width: 94%"></div></div>
+                            </div>
+                            <div class="comp-bar-item">
+                                <div class="comp-label"><span>2. Job Fitment Match</span><strong id="report-sub-match">91%</strong></div>
+                                <div class="comp-track"><div class="comp-fill bg-blue" id="report-sub-match-fill" style="width: 91%"></div></div>
+                            </div>
+                            <div class="comp-bar-item">
+                                <div class="comp-label"><span>3. Technical Interview Depth</span><strong id="report-sub-tech">88%</strong></div>
+                                <div class="comp-track"><div class="comp-fill bg-cyan" id="report-sub-tech-fill" style="width: 88%"></div></div>
+                            </div>
+                            <div class="comp-bar-item">
+                                <div class="comp-label"><span>4. Communication Metrics</span><strong id="report-sub-comm">90%</strong></div>
+                                <div class="comp-track"><div class="comp-fill bg-amber" id="report-sub-comm-fill" style="width: 90%"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Verified Strengths & Actionable Next Steps -->
+                        <div class="ats-audit-grid" style="margin-bottom: 24px;">
+                            <div class="ats-strengths-box">
+                                <div class="ats-box-header">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>Candidate Key Strengths</span>
+                                </div>
+                                <ul class="ats-feedback-list" id="report-strengths-list">
+                                    <li><i class="fa-solid fa-check text-emerald"></i> Deep technical expertise in Python, Docker, and distributed systems.</li>
+                                    <li><i class="fa-solid fa-check text-emerald"></i> High ATS score (94/100) with quantifiable business impact.</li>
+                                    <li><i class="fa-solid fa-check text-emerald"></i> Articulate voice interview delivery with structured trade-off reasoning.</li>
+                                </ul>
+                            </div>
+
+                            <div class="ats-weaknesses-box">
+                                <div class="ats-box-header">
+                                    <i class="fa-solid fa-route"></i>
+                                    <span>Actionable Upskilling Steps</span>
+                                </div>
+                                <ul class="ats-feedback-list" id="report-nextsteps-list">
+                                    <li><i class="fa-solid fa-arrow-trend-up text-amber"></i> Review tailored resume generated for this target opening.</li>
+                                    <li><i class="fa-solid fa-arrow-trend-up text-amber"></i> Complete priority certifications in Kubernetes and Cloud Architecture.</li>
+                                    <li><i class="fa-solid fa-arrow-trend-up text-amber"></i> Review follow-up interview questions on cache invalidation protocols.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="step-navigation-footer">
+                            <button class="btn btn-outline" onclick="switchToTab('tab-overview')">
+                                <i class="fa-solid fa-house"></i> Overview Dashboard
+                            </button>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-outline" onclick="window.print()">
+                                    <i class="fa-solid fa-print"></i> Print / PDF Report
+                                </button>
+                                <button class="btn btn-primary" id="btn-report-download-json">
+                                    <i class="fa-solid fa-download"></i> Export Audit JSON
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                     TALENT TOOL: SEMANTIC JOB SEARCH
                      ========================================================= -->
                 <section class="tab-pane" id="tab-search">
                     <div class="search-module-layout">
-                        
-                        <!-- Search Bar & Dynamic Weights Control Panel -->
                         <div class="glass-panel search-control-header">
                             <div class="search-input-combo">
                                 <div class="search-icon-adornment"><i class="fa-solid fa-magnifying-glass"></i></div>
-                                <input type="text" id="search-query-input" class="search-hero-input" placeholder="Search job roles semantically (e.g. 'Senior Python backend engineer with AWS and Kubernetes')..." value="python backend software developer">
-                                <button class="btn btn-primary" id="btn-run-search">
-                                    <i class="fa-solid fa-magnifying-glass"></i> Search
-                                </button>
+                                <input type="text" id="search-query-input" class="search-hero-input" placeholder="Search job roles semantically (e.g. 'Senior Python backend engineer with AWS')..." value="python backend software developer">
+                                <button class="btn btn-primary" id="btn-run-search">Search Jobs</button>
                             </div>
 
-                            <div class="search-tuning-row">
-                                <div class="tuning-slider-block">
-                                    <div class="slider-header-info">
-                                        <span>SBERT Semantic Weight:</span>
-                                        <span class="slider-val-badge" id="weight-sbert-val">0.60</span>
+                            <div class="slider-weights-deck">
+                                <div class="slider-weight-item">
+                                    <div class="slider-label-row">
+                                        <span><i class="fa-solid fa-font"></i> Lexical TF-IDF Weight</span>
+                                        <strong id="val-weight-tfidf">0.50</strong>
                                     </div>
-                                    <input type="range" id="slider-weight-sbert" min="0" max="1" step="0.05" value="0.60" class="modern-slider">
+                                    <input type="range" id="slider-weight-tfidf" min="0" max="1" step="0.05" value="0.5" class="modern-slider">
                                 </div>
-
-                                <div class="tuning-slider-block">
-                                    <div class="slider-header-info">
-                                        <span>TF-IDF Keyword Weight:</span>
-                                        <span class="slider-val-badge" id="weight-tfidf-val">0.40</span>
+                                <div class="slider-weight-item">
+                                    <div class="slider-label-row">
+                                        <span><i class="fa-solid fa-vector-square"></i> Dense SBERT Weight</span>
+                                        <strong id="val-weight-sbert">0.50</strong>
                                     </div>
-                                    <input type="range" id="slider-weight-tfidf" min="0" max="1" step="0.05" value="0.40" class="modern-slider">
-                                </div>
-
-                                <div class="search-category-filters">
-                                    <button class="filter-pill active" data-filter="all">All</button>
-                                    <button class="filter-pill" data-filter="Engineering">Engineering</button>
-                                    <button class="filter-pill" data-filter="AI & Data">AI & Data</button>
-                                    <button class="filter-pill" data-filter="Finance">Finance</button>
-                                    <button class="filter-pill" data-filter="HR & Operations">HR & Ops</button>
+                                    <input type="range" id="slider-weight-sbert" min="0" max="1" step="0.05" value="0.5" class="modern-slider">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Results List Container -->
-                        <div class="glass-panel search-results-box">
-                            <div class="results-meta-header">
-                                <div class="meta-title">
-                                    <i class="fa-solid fa-list-check text-blue"></i>
-                                    <h3>Matching Job Opportunities</h3>
-                                </div>
-                                <span class="badge badge-blue" id="search-results-count">6 Positions</span>
+                        <div class="search-results-viewport">
+                            <div class="results-header-bar">
+                                <h3 id="search-results-headline">Ranked Search Results</h3>
                             </div>
-
-                            <div class="search-results-grid" id="search-results-list">
-                                <!-- Dynamically Rendered Job Cards -->
+                            <div class="job-cards-deck" id="search-results-deck">
+                                <!-- Search results injected here -->
                             </div>
                         </div>
-
                     </div>
                 </section>
 
 
                 <!-- =========================================================
-                     TAB 5: CAREER TRAJECTORY & ROADMAPS
+                     TALENT TOOL: CAREER TRAJECTORY & ROADMAPS
                      ========================================================= -->
                 <section class="tab-pane" id="tab-trajectory">
                     <div class="trajectory-layout">
-                        
-                        <!-- Header Banner -->
                         <div class="glass-panel trajectory-header-card">
                             <div class="traj-intro">
                                 <span class="badge badge-blue"><i class="fa-solid fa-route"></i> Career Planning</span>
@@ -889,10 +1350,7 @@
                             </div>
                         </div>
 
-                        <!-- Roadmap Visualization Cards -->
                         <div class="roadmap-grid-container">
-                            
-                            <!-- Roadmap Timeline Steps -->
                             <div class="glass-panel roadmap-steps-panel">
                                 <div class="panel-headline">
                                     <div class="headline-title">
@@ -901,13 +1359,11 @@
                                     </div>
                                     <span class="badge badge-blue" id="traj-duration-badge">~ 6 - 9 Months Estimated</span>
                                 </div>
-
                                 <div class="milestone-timeline" id="traj-milestone-timeline">
-                                    <!-- Dynamic Milestone Cards -->
+                                    <!-- Dynamic Milestones -->
                                 </div>
                             </div>
 
-                            <!-- Upskilling Matrix & Certifications -->
                             <div class="glass-panel roadmap-sidebar-panel">
                                 <div class="panel-headline">
                                     <div class="headline-title">
@@ -915,23 +1371,18 @@
                                         <h3>Priority Certifications</h3>
                                     </div>
                                 </div>
-
                                 <div class="cert-list" id="traj-cert-list">
                                     <!-- Dynamic Certifications -->
                                 </div>
-
-                                <div class="salary-uplift-card">
+                                <div class="salary-uplift-card" style="margin-top: 20px;">
                                     <div class="uplift-header">
                                         <span>Projected Salary Growth</span>
                                         <i class="fa-solid fa-arrow-trend-up text-emerald"></i>
                                     </div>
                                     <div class="uplift-figure" id="traj-salary-figure">+ 48% Compensation Uplift</div>
-                                    <p class="uplift-note">Based on nationwide cross-industry benchmarks for high-demand skills.</p>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </section>
 
@@ -939,159 +1390,73 @@
         </div>
     </div>
 
-    <!-- =========================================================
-         MODALS & OVERLAYS
-         ========================================================= -->
-
     <!-- Quick Samples Drawer Modal -->
     <div class="modal-overlay" id="samples-modal">
         <div class="modal-container glass-panel">
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fa-solid fa-folder-open text-blue"></i>
-                    <h3>Pre-loaded Demo Samples</h3>
+                    <h3>Pre-loaded Demo Candidates</h3>
                 </div>
                 <button class="modal-close-btn" id="btn-close-samples">&times;</button>
             </div>
             
             <div class="modal-body">
-                <p class="modal-desc">Select any sample candidate profile or job description below to instantaneously populate inputs across the active workspace.</p>
-                
-                <div class="sample-category-section">
-                    <h4><i class="fa-solid fa-user-gear text-blue"></i> Candidate Resume Profiles</h4>
-                    <div class="samples-cards-grid">
-                        <div class="sample-pick-card" onclick="applySampleData('resume', 'dev')">
-                            <div class="pick-icon icon-blue"><i class="fa-solid fa-code"></i></div>
-                            <div class="pick-content">
-                                <h5>Senior Full Stack Engineer</h5>
-                                <p>Alex Rivera • 6+ Yrs • Python, React, AWS, Kubernetes, Microservices</p>
-                            </div>
+                <p class="modal-desc">Select any sample candidate profile below to populate inputs across the 8-step workflow.</p>
+                <div class="samples-cards-grid">
+                    <div class="sample-pick-card" onclick="applySampleData('resume', 'dev')">
+                        <div class="pick-icon icon-blue"><i class="fa-solid fa-code"></i></div>
+                        <div class="pick-content">
+                            <h5>Senior Full Stack Engineer</h5>
+                            <p>Alex Rivera • 6+ Yrs • Python, React, AWS, Kubernetes, Microservices</p>
                         </div>
+                    </div>
 
-                        <div class="sample-pick-card" onclick="applySampleData('resume', 'ai')">
-                            <div class="pick-icon icon-cyan"><i class="fa-solid fa-brain"></i></div>
-                            <div class="pick-content">
-                                <h5>AI / ML Research Scientist</h5>
-                                <p>Dr. Elena Rostova • 5+ Yrs • PyTorch, Transformer Models, NLP, CUDA</p>
-                            </div>
+                    <div class="sample-pick-card" onclick="applySampleData('resume', 'ai')">
+                        <div class="pick-icon icon-cyan"><i class="fa-solid fa-brain"></i></div>
+                        <div class="pick-content">
+                            <h5>AI / ML Research Scientist</h5>
+                            <p>Dr. Elena Rostova • 5+ Yrs • PyTorch, Transformer Models, NLP, CUDA</p>
                         </div>
+                    </div>
 
-                        <div class="sample-pick-card" onclick="applySampleData('resume', 'acct')">
-                            <div class="pick-icon icon-emerald"><i class="fa-solid fa-calculator"></i></div>
-                            <div class="pick-content">
-                                <h5>Corporate Audit Manager (CPA)</h5>
-                                <p>Sarah Jenkins, CPA • 7+ Yrs • GAAP, SOX Compliance, Oracle ERP, Tax</p>
-                            </div>
+                    <div class="sample-pick-card" onclick="applySampleData('resume', 'acct')">
+                        <div class="pick-icon icon-emerald"><i class="fa-solid fa-calculator"></i></div>
+                        <div class="pick-content">
+                            <h5>Corporate Audit Manager (CPA)</h5>
+                            <p>Sarah Jenkins, CPA • 7+ Yrs • GAAP, SOX Compliance, Oracle ERP, Tax</p>
                         </div>
+                    </div>
 
-                        <div class="sample-pick-card" onclick="applySampleData('resume', 'hr')">
-                            <div class="pick-icon icon-amber"><i class="fa-solid fa-users"></i></div>
-                            <div class="pick-content">
-                                <h5>Talent Acquisition Director</h5>
-                                <p>Marcus Vance • 5+ Yrs • ATS Management, Technical Sourcing, Culture</p>
-                            </div>
-                        </div>
-
-                        <div class="sample-pick-card" onclick="applySampleData('resume', 'cyber')">
-                            <div class="pick-icon icon-rose"><i class="fa-solid fa-shield-virus"></i></div>
-                            <div class="pick-content">
-                                <h5>Cybersecurity SecOps Lead</h5>
-                                <p>Devon Reed, CISSP • 6+ Yrs • Threat Hunting, SIEM, Zero Trust, Cloud Sec</p>
-                            </div>
+                    <div class="sample-pick-card" onclick="applySampleData('resume', 'hr')">
+                        <div class="pick-icon icon-amber"><i class="fa-solid fa-users"></i></div>
+                        <div class="pick-content">
+                            <h5>Talent Acquisition Director</h5>
+                            <p>Marcus Vance • 5+ Yrs • ATS Management, Technical Sourcing, Culture</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="sample-category-section" style="margin-top: 1.5rem;">
-                    <h4><i class="fa-solid fa-briefcase text-emerald"></i> Target Job Descriptions</h4>
-                    <div class="samples-cards-grid">
-                        <div class="sample-pick-card" onclick="applySampleData('job', 'dev')">
-                            <div class="pick-icon icon-blue"><i class="fa-solid fa-server"></i></div>
-                            <div class="pick-content">
-                                <h5>Senior Backend Cloud Engineer</h5>
-                                <p>High-volume distributed systems, Python/Django, Docker, Kafka</p>
-                            </div>
-                        </div>
-
-                        <div class="sample-pick-card" onclick="applySampleData('job', 'ai')">
-                            <div class="pick-icon icon-cyan"><i class="fa-solid fa-robot"></i></div>
-                            <div class="pick-content">
-                                <h5>Lead Machine Learning Engineer</h5>
-                                <p>LLM fine-tuning, vector databases, PyTorch, Model serving & latency</p>
-                            </div>
-                        </div>
-
-                        <div class="sample-pick-card" onclick="applySampleData('job', 'acct')">
-                            <div class="pick-icon icon-emerald"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                            <div class="pick-content">
-                                <h5>Senior Financial Audit Specialist</h5>
-                                <p>CPA required, Sox compliance, corporate risk management</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeSampleModal()">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Audit Report Modal -->
+    <!-- Quick Audit Report Modal -->
     <div class="modal-overlay" id="report-modal">
-        <div class="modal-container glass-panel report-modal-box">
+        <div class="modal-container glass-panel">
             <div class="modal-header">
                 <div class="modal-title">
-                    <i class="fa-solid fa-file-invoice text-emerald"></i>
-                    <h3>Candidate Talent & ATS Audit Report</h3>
+                    <i class="fa-solid fa-award text-blue"></i>
+                    <h3>Career Readiness Audit</h3>
                 </div>
                 <button class="modal-close-btn" id="btn-close-report">&times;</button>
             </div>
             
-            <div class="modal-body printable-report-body" id="printable-report-content">
-                <div class="report-header-section">
-                    <div class="report-candidate-meta">
-                        <h2 id="report-cand-name">Alex Rivera</h2>
-                        <p id="report-cand-role">Senior Full Stack Engineer</p>
-                        <span class="report-date-badge" id="report-timestamp">Career IQ Talent Report</span>
-                    </div>
-                    <div class="report-score-pill">
-                        <span class="score-lbl">OVERALL FITMENT</span>
-                        <span class="score-val" id="report-cand-score">94%</span>
-                    </div>
-                </div>
-
-                <div class="report-divider"></div>
-
-                <div class="report-sections-grid">
-                    <div class="report-metric-box">
-                        <h5>ATS Readability Score</h5>
-                        <div class="metric-highlight text-emerald">96 / 100</div>
-                        <p>Format is cleanly structured with high parsability across standard applicant tracking systems.</p>
-                    </div>
-
-                    <div class="report-metric-box">
-                        <h5>Model Classification</h5>
-                        <div class="metric-highlight text-blue" id="report-cand-category">Software Developer</div>
-                        <p>Hybrid soft voting confidence: <strong>88.4%</strong></p>
-                    </div>
-                </div>
-
-                <div class="report-section-block">
-                    <h5>Key Verified Competencies</h5>
-                    <div class="skills-tag-wrap" id="report-cand-skills">
-                        <span class="skill-tag matched">PYTHON</span>
-                        <span class="skill-tag matched">REACT</span>
-                        <span class="skill-tag matched">DOCKER</span>
-                        <span class="skill-tag matched">KUBERNETES</span>
-                        <span class="skill-tag matched">AWS</span>
-                        <span class="skill-tag matched">MICROSERVICES</span>
-                    </div>
-                </div>
-
-                <div class="report-section-block">
-                    <h5>AI Hiring Recommendation</h5>
-                    <p class="report-explanation" id="report-cand-notes">Candidate demonstrates verified senior-level competency in cloud-native microservices architecture. Strong potential for immediate deployment in backend engineering squads.</p>
+            <div class="modal-body">
+                <p class="modal-desc" id="report-timestamp">Generated • Career IQ Orchestrator</p>
+                <div class="report-data-card" style="padding: 16px; background: rgba(240, 249, 255, 0.8); border-radius: 12px; margin-bottom: 16px;">
+                    <h4 id="report-cand-name" style="color: var(--color-primary); font-size: 18px;">Alex Rivera</h4>
+                    <p id="report-cand-category" style="font-size: 13px; color: var(--text-secondary);">Senior Full Stack Engineer</p>
+                    <p style="font-size: 14px; font-weight: 700; color: #166534; margin-top: 8px;">Overall Readiness: <span id="report-cand-score">89%</span></p>
                 </div>
             </div>
 
@@ -1107,6 +1472,7 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Main Logic Script -->
-    <script src="app.js"></script>
+    <script src="/static/app.js"></script>
 </body>
 </html>
+

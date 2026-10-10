@@ -62,8 +62,11 @@ class ResumeClassifier:
         
         # Get SVM prediction probabilities
         if self.svm_pipeline is not None:
-            svm_decision = self.svm_pipeline.decision_function([cleaned_text])
-            svm_probs = softmax(svm_decision)[0]
+            if hasattr(self.svm_pipeline, "predict_proba"):
+                svm_probs = self.svm_pipeline.predict_proba([cleaned_text])[0]
+            else:
+                svm_decision = self.svm_pipeline.decision_function([cleaned_text])
+                svm_probs = softmax(svm_decision)[0]
             
         # Get Transformer prediction probabilities
         if self.bert_model is not None:
