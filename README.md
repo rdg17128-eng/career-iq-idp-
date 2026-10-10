@@ -11,6 +11,46 @@
 
 ---
 
+## 💡 The Core Idea
+
+**The Problem:** Job seekers often struggle to understand how modern ATS (Applicant Tracking Systems) read their resumes, what skills they are missing for their dream roles, and how to properly prepare for technical interviews.  
+**The Solution:** Career IQ acts as an automated, personalized AI career coach. You upload your resume, and the system intelligently parses it, evaluates it against industry standards, matches you to relevant jobs, recommends learning paths for missing skills, and even conducts a dynamic mock interview to prepare you for the real deal.
+
+## 🔄 System Architecture & Visual Flow
+
+Here is the high-level visual flow of how the UI, backend server, and AI models interact in real-time:
+
+```mermaid
+graph LR
+    subgraph Frontend [Modern UI Dashboard]
+        UI[Interactive Dashboard]
+        Upload[Resume Upload]
+        Voice[Voice Interview Interface]
+    end
+
+    subgraph Backend [FastAPI Server]
+        API[RESTful API Endpoints]
+        Lifespan[Background Model Loader]
+    end
+
+    subgraph ML_Engines [AI & NLP Models]
+        C[DistilBERT Classifier]
+        N[Transformer NER]
+        M[SBERT + XGB Job Matcher]
+        S[Hybrid Search Engine]
+        R[Career Recommender]
+    end
+
+    UI -->|JSON requests| API
+    Upload -->|Binary PDF/DOCX| API
+    Voice -->|Transcribed Text| API
+    
+    API -->|Inference Tasks| C & N & M & S & R
+    Lifespan -.->|Loads on Startup| ML_Engines
+```
+
+---
+
 ## 🌟 End-to-End Application Workflow
 
 Career IQ provides a complete, 8-step talent intelligence and career readiness lifecycle:
