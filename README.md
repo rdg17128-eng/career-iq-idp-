@@ -122,33 +122,69 @@ flowchart TD
 
 ---
 
-## 🏗️ Architecture & Project Structure
+## 🏗️ Standardized ML Architecture & Directory Layout
+
+Every model engine in CareerIQ follows a strict, modular production layout with dataset metadata schemas, preprocessing pipelines, training, testing, evaluation, and saved model checkpoints:
 
 ```
+models/<model_name>/
+├── dataset_info/           # Schema, quality audits, splits, label distribution metadata
+│   ├── dataset_summary.json
+│   ├── dataset_schema.json
+│   ├── data_quality_report.json
+│   ├── label_distribution.json
+│   ├── split_summary.json
+│   └── split_config.json
+├── preprocessing/          # Data sanitization, tokenization, subword alignment
+├── training/               # Fine-tuning and model fitting scripts
+├── testing/                # Fast unit assertions and inference testing
+├── evaluation/             # Metrics, confusion matrices, seqeval / rank evaluation
+├── saved_model/            # Model weights, tokenizers, vectorizers, and index files
+├── inference.py            # Standalone, production-ready inference API
+└── README.md               # Model-specific architectural documentation
+```
+
+### 📂 Repository File Structure
+```
 career-iq/
-├── datasets/                                # Preprocessed dataset files
+├── datasets/                                # Raw dataset files & ground truth
 │   ├── career_role_skill_dataset/           # Job roles, skills database & test profiles
-│   ├── job_description_dataset/             # Job postings corpora
-│   └── job_matching_dataset/                # Matched candidate-job pairs
+│   ├── job_description_dataset/             # Job postings corpora (521 records)
+│   ├── job_matching_dataset/                # Cartesian paired job match dataset (8,000 pairs)
+│   ├── resume_classification_dataset/       # 24-class resume corpora (2,484 records)
+│   └── resume_ner_dataset/                  # Annotated resume token JSONs (220 documents)
 │
-├── models/                                  # ML model pipelines (train, eval, inference)
+├── models/                                  # Modular ML pipelines
 │   ├── career_recommendation/               # Career trajectory & skill gap engine
 │   ├── job_matching/                        # SBERT + XGBoost job fitment engine
 │   ├── job_search/                          # TF-IDF + SBERT hybrid search engine
 │   ├── resume_classification/               # DistilBERT + SVM classifier ensemble
-│   └── resume_ner/                          # Transformer token classification NER
+│   └── resume_ner/                          # RoBERTa token classification NER
+│
+├── reports/                                 # Platform audit & verification reports
+│   ├── model_audit_report.md                # Comprehensive 5-engine audit report
+│   └── final_model_comparison.md            # Empirical performance comparison
 │
 ├── web_app/                                 # Full-stack Web Application & API
 │   ├── app.py                               # FastAPI application and routing
+│   ├── pipeline_services.py                 # Multi-engine orchestrator & service layer
 │   └── static/                              # Modern Vanilla UI Dashboard
 │       ├── index.html                       # Responsive HTML5 layout
 │       ├── style.css                        # Glassmorphic design & CSS tokens
 │       └── app.js                           # Real-time inference & telemetry charts
 │
-├── run_server.py                            # Application entrypoint
+├── run_server.py                            # Application entrypoint (Uvicorn / FastAPI)
 ├── requirements.txt                         # Python dependencies
 └── README.md                                # Project documentation
 ```
+
+---
+
+## 📑 Model Audit & Quality Reports
+
+The platform has undergone rigorous empirical verification and data hygiene audits:
+- **[Model Audit Report](reports/model_audit_report.md)**: Exhaustive audit of all 5 engines, dataset schemas, zero missing values verification, cross-partition leakage prevention, and hyperparameter logs.
+- **[Final Model Comparison Report](reports/final_model_comparison.md)**: Side-by-side metric comparison, addressing class imbalance in token classification vs entity-level F1, ensemble justification, and retrieval accuracy.
 
 ---
 
