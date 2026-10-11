@@ -1,0 +1,7 @@
+{
+  "model_name": "career_recommendation",
+  "type": "Unsupervised / Dense SBERT & Skill-Overlap Ranking System",
+  "reference_corpus_size": 324,
+  "held_out_evaluation_benchmarks": 8,
+  "evaluation_split": "Held-out test resume profiles (test_resumes.json)"
+}

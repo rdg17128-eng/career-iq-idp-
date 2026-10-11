@@ -1,0 +1,5 @@
+{
+  "indexed_docs": 521,
+  "tfidf_weight": 0.4,
+  "sbert_weight": 0.6
+}

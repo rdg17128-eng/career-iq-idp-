@@ -1,0 +1,8 @@
+{
+  "columns": {
+    "ID": "Unique resume integer identifier",
+    "Resume_str": "Normalized resume text",
+    "Resume_html": "HTML formatted text of resume",
+    "Category": "Target occupational domain class"
+  }
+}

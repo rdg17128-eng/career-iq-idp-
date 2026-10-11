@@ -1,0 +1,9 @@
+{
+  "dataset_name": "job_matching_dataset",
+  "dataset_path": "C:\\CareerMind_AI\\datasets\\job_matching_dataset\\all_job_post.csv",
+  "format": "CSV",
+  "total_jobs": 1167,
+  "total_categories": 5,
+  "total_pairs_generated": 8000,
+  "description": "Job postings paired with candidate resumes to formulate binary fitment classification."
+}

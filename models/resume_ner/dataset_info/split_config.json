@@ -1,0 +1,7 @@
+{
+  "train_pct": 0.8,
+  "val_pct": 0.1,
+  "test_pct": 0.1,
+  "seed": 42,
+  "unit": "document"
+}

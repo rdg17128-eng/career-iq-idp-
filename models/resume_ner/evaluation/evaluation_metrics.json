@@ -1,0 +1,7 @@
+{
+  "precision": 0.4602076124567474,
+  "recall": 0.5,
+  "f1": 0.4792792792792793,
+  "accuracy": 0.9349846578022858,
+  "report": "                     precision    recall  f1-score   support\n\n       COLLEGE_NAME       0.36      0.49      0.41        37\nCOMPANIES_WORKED_AT       0.06      0.05      0.05        20\n             DEGREE       0.73      0.82      0.77        33\n        DESIGNATION       0.35      0.62      0.45        24\n      EMAIL_ADDRESS       0.41      0.69      0.51        16\n    GRADUATION_YEAR       0.00      0.00      0.00        25\n           LOCATION       0.88      0.74      0.80        19\n               NAME       0.86      0.86      0.86        22\n             SKILLS       0.36      0.42      0.39        66\n            UNKNOWN       0.00      0.00      0.00         1\nYEARS_OF_EXPERIENCE       0.00      0.00      0.00         3\n\n          micro avg       0.46      0.50      0.48       266\n          macro avg       0.36      0.43      0.39       266\n       weighted avg       0.43      0.50      0.45       266\n"
+}

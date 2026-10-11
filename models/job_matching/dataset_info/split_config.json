@@ -1,0 +1,6 @@
+{
+  "train_pairs": 6000,
+  "val_pairs": 1000,
+  "test_pairs": 1000,
+  "seed": 42
+}

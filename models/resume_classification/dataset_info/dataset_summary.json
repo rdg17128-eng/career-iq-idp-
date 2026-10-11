@@ -1,0 +1,8 @@
+{
+  "dataset_name": "resume_classification_dataset",
+  "dataset_path": "C:\\CareerMind_AI\\datasets\\resume_classification_dataset\\Resume\\Resume.csv",
+  "format": "CSV",
+  "total_records": 2484,
+  "total_categories": 24,
+  "description": "Multi-class resume classification dataset spanning 24 industrial domains."
+}

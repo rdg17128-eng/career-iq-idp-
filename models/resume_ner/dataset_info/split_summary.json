@@ -1,0 +1,10 @@
+{
+  "model_name": "resume_ner",
+  "split_strategy": "Document-level train_test_split (80/10/10)",
+  "random_seed": 42,
+  "stratified": false,
+  "train_samples": 176,
+  "val_samples": 22,
+  "test_samples": 22,
+  "total_samples": 220
+}

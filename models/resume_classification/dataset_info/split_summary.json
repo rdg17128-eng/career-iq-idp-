@@ -1,0 +1,10 @@
+{
+  "model_name": "resume_classification",
+  "split_strategy": "Stratified train_test_split on Category label (80/10/10)",
+  "random_seed": 42,
+  "stratified": true,
+  "train_samples": 1986,
+  "val_samples": 248,
+  "test_samples": 249,
+  "total_samples": 2483
+}

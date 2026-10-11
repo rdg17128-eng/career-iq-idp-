@@ -1,0 +1,6 @@
+{
+  "model_name": "job_search",
+  "type": "Hybrid Lexical TF-IDF + Dense SBERT Search Retrieval Index",
+  "indexed_job_descriptions": 521,
+  "evaluation_split": "Held-out benchmark queries (5 representative domain queries)"
+}

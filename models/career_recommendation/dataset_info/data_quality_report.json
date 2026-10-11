@@ -1,0 +1,12 @@
+{
+  "missing_values": {
+    "Job Title": 0,
+    "Category": 0,
+    "Education Requirement": 0,
+    "Experience Years": 0,
+    "Required Skills": 0,
+    "Salary Range": 0
+  },
+  "duplicate_roles": 0,
+  "notes": "Reference job roles dataset has complete coverage with zero missing attributes."
+}

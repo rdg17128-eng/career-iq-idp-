@@ -1,0 +1,13 @@
+{
+  "job_categories": {
+    "INFORMATION-TECHNOLOGY": 240,
+    "BUSINESS-DEVELOPMENT": 239,
+    "FINANCE": 236,
+    "SALES": 232,
+    "HR": 220
+  },
+  "pairs_distribution": {
+    "positive_match": 4000,
+    "negative_match": 4000
+  }
+}

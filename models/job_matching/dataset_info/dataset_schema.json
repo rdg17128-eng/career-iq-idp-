@@ -1,0 +1,9 @@
+{
+  "columns": {
+    "job_id": "Integer job identifier",
+    "category": "Domain category string",
+    "job_title": "Position title string",
+    "job_description": "Full job description text",
+    "job_skill_set": "String representation of required skill list"
+  }
+}

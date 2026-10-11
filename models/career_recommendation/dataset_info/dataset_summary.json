@@ -1,0 +1,9 @@
+{
+  "dataset_name": "career_role_skill_dataset",
+  "dataset_path": "C:\\CareerMind_AI\\datasets\\career_role_skill_dataset",
+  "format": "CSV & JSON",
+  "total_reference_roles": 324,
+  "total_categories": 42,
+  "evaluation_profiles": 8,
+  "description": "Career reference knowledge base mapping roles, education, experience, and required skills."
+}

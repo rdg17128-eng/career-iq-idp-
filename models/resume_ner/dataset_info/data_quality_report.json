@@ -1,0 +1,7 @@
+{
+  "missing_texts": 0,
+  "empty_entities": 0,
+  "duplicate_documents": 0,
+  "class_imbalance_ratio": 175.5,
+  "notes": "Background 'O' tokens account for ~93.5% of total subwords; rare entity classes have limited instances."
+}

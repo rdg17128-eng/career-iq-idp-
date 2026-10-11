@@ -1,0 +1,11 @@
+{
+  "missing_values": {
+    "job_id": 0,
+    "category": 0,
+    "job_title": 0,
+    "job_description": 0,
+    "job_skill_set": 0
+  },
+  "duplicate_jobs": 0,
+  "notes": "No nulls in source jobs; pair generation ensures 50% positive and 50% negative balance."
+}

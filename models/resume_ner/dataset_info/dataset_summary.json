@@ -1,0 +1,8 @@
+{
+  "dataset_name": "resume_ner_dataset",
+  "dataset_path": "C:\\CareerMind_AI\\datasets\\resume_ner_dataset",
+  "format": "JSON",
+  "total_documents": 220,
+  "total_entities_annotated": 2216,
+  "description": "Resume corpus annotated with named entity spans for candidate extraction."
+}

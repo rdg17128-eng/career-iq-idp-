@@ -1,0 +1,11 @@
+{
+  "missing_values": {
+    "ID": 0,
+    "Resume_str": 0,
+    "Resume_html": 0,
+    "Category": 0
+  },
+  "duplicate_resume_texts": 2,
+  "duplicate_ids": 0,
+  "notes": "Dataset is high quality with 0 null fields across all 2,484 entries."
+}

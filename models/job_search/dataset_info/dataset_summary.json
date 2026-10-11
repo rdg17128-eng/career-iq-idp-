@@ -1,0 +1,7 @@
+{
+  "dataset_name": "job_description_dataset",
+  "dataset_path": "C:\\CareerMind_AI\\datasets\\job_description_dataset\\data.csv",
+  "format": "CSV",
+  "total_jobs": 521,
+  "description": "Corpus of job postings utilized to build the hybrid TF-IDF and SBERT retrieval index."
+}

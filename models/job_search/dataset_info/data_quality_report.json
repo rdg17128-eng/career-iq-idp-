@@ -1,0 +1,8 @@
+{
+  "missing_values": {
+    "Job Title": 0,
+    "Description": 0
+  },
+  "duplicate_rows": 0,
+  "notes": "Clean job description corpus with 521 distinct job opportunities."
+}

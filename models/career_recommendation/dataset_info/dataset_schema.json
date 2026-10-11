@@ -1,0 +1,10 @@
+{
+  "columns": {
+    "Job Title": "Target profession title string",
+    "Category": "Industry field",
+    "Education Requirement": "Required degree standard",
+    "Experience Years": "Experience range requirement",
+    "Required Skills": "Pipe-separated list of required skill strings",
+    "Salary Range": "Estimated salary benchmark"
+  }
+}

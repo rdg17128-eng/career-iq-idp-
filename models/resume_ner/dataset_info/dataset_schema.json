@@ -1,0 +1,19 @@
+{
+  "document_fields": {
+    "text": "Full resume text content (string)",
+    "entities": "List of [start_char, end_char, entity_type] spans"
+  },
+  "entity_types": [
+    "COLLEGE_NAME",
+    "COMPANIES_WORKED_AT",
+    "DEGREE",
+    "DESIGNATION",
+    "EMAIL_ADDRESS",
+    "GRADUATION_YEAR",
+    "LOCATION",
+    "NAME",
+    "SKILLS",
+    "UNKNOWN",
+    "YEARS_OF_EXPERIENCE"
+  ]
+}
